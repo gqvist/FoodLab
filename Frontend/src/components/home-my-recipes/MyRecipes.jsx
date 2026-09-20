@@ -1,8 +1,8 @@
-import "./MyRecipes.css"
+import "./MyRecipes.css";
 
-import DashboardCard from "../dashboard-card/DashBoardCard.jsx"
-import { Button } from "../ui/button.jsx"
-import { myRecipes } from "../../assets/test-data/homeTestData.js"
+import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Button } from "../ui/button.jsx";
+import { myRecipes } from "../../assets/test-data/homeTestData.js";
 
 function MyRecipes() {
   return (
@@ -13,9 +13,7 @@ function MyRecipes() {
           <p>Recept som du har skapat.</p>
         </div>
 
-        <Button>
-          + Nytt recept
-        </Button>
+        <Button>+ Nytt recept</Button>
       </div>
 
       <div className="my-recipes-grid">
@@ -31,7 +29,7 @@ function MyRecipes() {
         ))}
       </div>
     </DashboardCard>
-  )
+  );
 }
 
-export default MyRecipes
+export default MyRecipes;

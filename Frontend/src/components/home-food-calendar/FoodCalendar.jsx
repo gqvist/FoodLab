@@ -1,27 +1,27 @@
-import "./FoodCalendar.css"
+import "./FoodCalendar.css";
 
-import { useState } from "react"
-import dayjs from "dayjs"
-import isoWeek from "dayjs/plugin/isoWeek"
+import { useState } from "react";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
 
-import DashboardCard from "../dashboard-card/DashBoardCard.jsx"
-import { Button } from "../ui/button.jsx"
-import { weekPlan } from "../../assets/test-data/homeTestData.js"
+import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Button } from "../ui/button.jsx";
+import { weekPlan } from "../../assets/test-data/homeTestData.js";
 
 // Använder dayjs för att få veckan
-dayjs.extend(isoWeek)
+dayjs.extend(isoWeek);
 
 // Få dagens dag och veckonummer
 function FoodCalendar() {
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState(false);
 
-  const today = dayjs()
-  const weekNumber = today.isoWeek()
+  const today = dayjs();
+  const weekNumber = today.isoWeek();
 
   // Så att veckodagen skrivs ut
   const currentDay = today.toDate().toLocaleDateString("sv-SE", {
     weekday: "long",
-  })
+  });
 
   return (
     <DashboardCard>
@@ -31,9 +31,7 @@ function FoodCalendar() {
           <p>Planerade recept för den här veckan.</p>
         </div>
 
-        <Button variant="outline">
-          Ändra planering
-        </Button>
+        <Button variant="outline">Ändra planering</Button>
       </div>
 
       <div
@@ -42,8 +40,7 @@ function FoodCalendar() {
         }`}
       >
         {weekPlan.map((item) => {
-          const isToday =
-            item.day.toLowerCase() === currentDay.toLowerCase()
+          const isToday = item.day.toLowerCase() === currentDay.toLowerCase();
 
           return (
             <div
@@ -52,28 +49,21 @@ function FoodCalendar() {
               }`}
               key={item.day}
             >
-              <span className="food-calendar-day-name">
-                {item.day}
-              </span>
+              <span className="food-calendar-day-name">{item.day}</span>
 
-              <span className="food-calendar-recipe">
-                {item.recipe}
-              </span>
+              <span className="food-calendar-recipe">{item.recipe}</span>
             </div>
-          )
+          );
         })}
       </div>
 
       <div className="food-calendar-expand">
-        <Button
-          variant="ghost"
-          onClick={() => setShowAll(!showAll)}
-        >
+        <Button variant="ghost" onClick={() => setShowAll(!showAll)}>
           {showAll ? "Visa mindre" : "Visa alla"}
         </Button>
       </div>
     </DashboardCard>
-  )
+  );
 }
 
-export default FoodCalendar
+export default FoodCalendar;

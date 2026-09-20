@@ -1,12 +1,10 @@
-import "./DashBoardCard.css"
+import "./DashBoardCard.css";
 
 // Komponent för dashboard korten
 function DashboardCard({ children, className = "" }) {
   return (
-    <section className={`dashboard-card ${className}`}>
-      {children}
-    </section>
-  )
+    <section className={`dashboard-card ${className}`}>{children}</section>
+  );
 }
 
-export default DashboardCard
+export default DashboardCard;

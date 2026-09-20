@@ -1,8 +1,8 @@
-import "./ShoppingList.css"
+import "./ShoppingList.css";
 
-import DashboardCard from "../dashboard-card/DashBoardCard.jsx"
-import { Button } from "../ui/button.jsx"
-import { shoppingList } from "../../assets/test-data/homeTestData.js"
+import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Button } from "../ui/button.jsx";
+import { shoppingList } from "../../assets/test-data/homeTestData.js";
 
 function ShoppingList() {
   return (
@@ -13,9 +13,7 @@ function ShoppingList() {
           <p>Ingredienser från veckans matplan.</p>
         </div>
 
-        <Button variant="outline">
-          Dela ↗
-        </Button>
+        <Button variant="outline">Dela ↗</Button>
       </div>
 
       <div className="shopping-list-grid">
@@ -30,7 +28,7 @@ function ShoppingList() {
         ))}
       </div>
     </DashboardCard>
-  )
+  );
 }
 
-export default ShoppingList
+export default ShoppingList;

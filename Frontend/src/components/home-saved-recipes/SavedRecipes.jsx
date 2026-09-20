@@ -1,8 +1,8 @@
-import "./SavedRecipes.css"
+import "./SavedRecipes.css";
 
-import DashboardCard from "../dashboard-card/DashBoardCard.jsx"
-import { Button } from "../ui/button.jsx"
-import { savedRecipes } from "../../assets/test-data/homeTestData.js"
+import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Button } from "../ui/button.jsx";
+import { savedRecipes } from "../../assets/test-data/homeTestData.js";
 
 function SavedRecipes() {
   return (
@@ -13,9 +13,7 @@ function SavedRecipes() {
           <p>Recept från andra användare som du har sparat.</p>
         </div>
 
-        <Button variant="outline">
-          Visa alla
-        </Button>
+        <Button variant="outline">Visa alla</Button>
       </div>
 
       <div className="saved-recipes-grid">
@@ -31,7 +29,7 @@ function SavedRecipes() {
         ))}
       </div>
     </DashboardCard>
-  )
+  );
 }
 
-export default SavedRecipes
+export default SavedRecipes;

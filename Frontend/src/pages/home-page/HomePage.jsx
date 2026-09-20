@@ -1,10 +1,10 @@
-import "./HomePage.css"
+import "./HomePage.css";
 
-import TopNav from "../../components/top-nav/TopNav"
-import FoodCalendar from "../../components/home-food-calendar/FoodCalendar"
-import ShoppingList from "../../components/home-shopping-list/ShoppingList"
-import MyRecipes from "../../components/home-my-recipes/MyRecipes"
-import SavedRecipes from "../../components/home-saved-recipes/SavedRecipes"
+import TopNav from "../../components/top-nav/TopNav";
+import FoodCalendar from "../../components/home-food-calendar/FoodCalendar";
+import ShoppingList from "../../components/home-shopping-list/ShoppingList";
+import MyRecipes from "../../components/home-my-recipes/MyRecipes";
+import SavedRecipes from "../../components/home-saved-recipes/SavedRecipes";
 
 function HomePage() {
   return (
@@ -20,7 +20,7 @@ function HomePage() {
         </div>
       </main>
     </>
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;
