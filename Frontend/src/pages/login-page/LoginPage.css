@@ -36,3 +36,21 @@
   height: auto;
   margin: 0 auto 3rem;
 }
+
+.no-account-text {
+  font-size: small;
+  margin-top: 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.no-account-button {
+  font-size: inherit;
+  color: var(--foreground);
+  margin-left: 0.25rem;
+  text-decoration: none;
+}
+
+.no-account-button:hover,
+.no-account-button:focus-visible {
+  text-decoration: underline;
+}

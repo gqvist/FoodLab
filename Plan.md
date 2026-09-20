@@ -62,6 +62,9 @@ Man ska kunna spara andras recept. Kan visas genom Alla receptId med UserId X t.
 
  **CheckListPages frontend**
  - Login ✓
- - Home
- - all-recipe
- - single-recipe
+ - Home ✓
+ - Plan page
+ - Recipe page
+ - Single-recipe
+ - Admin dashboard
+ - Profile
