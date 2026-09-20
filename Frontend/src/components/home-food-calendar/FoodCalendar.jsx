@@ -4,9 +4,9 @@ import { useState } from "react"
 import dayjs from "dayjs"
 import isoWeek from "dayjs/plugin/isoWeek"
 
-import DashboardCard from "@/components/dashboard-card/DashboardCard"
-import { Button } from "@/components/ui/button"
-import { weekPlan } from "@/assets/test-data/homeTestData"
+import DashboardCard from "../dashboard-card/DashBoardCard.jsx"
+import { Button } from "../ui/button.jsx"
+import { weekPlan } from "../../assets/test-data/homeTestData.js"
 
 // Använder dayjs för att få veckan
 dayjs.extend(isoWeek)

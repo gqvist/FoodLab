@@ -1,8 +1,8 @@
 import "./SavedRecipes.css"
 
-import DashboardCard from "@/components/dashboard-card/DashboardCard"
-import { Button } from "@/components/ui/button"
-import { savedRecipes } from "@/assets/test-data/homeTestData"
+import DashboardCard from "../dashboard-card/DashBoardCard.jsx"
+import { Button } from "../ui/button.jsx"
+import { savedRecipes } from "../../assets/test-data/homeTestData.js"
 
 function SavedRecipes() {
   return (

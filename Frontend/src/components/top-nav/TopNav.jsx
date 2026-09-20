@@ -2,8 +2,8 @@ import "./TopNav.css"
 import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg"
 
 import { NavLink } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { ProfileIcon } from "@/assets/icons/Icons"
+import { buttonVariants } from "../ui/button.jsx"
+import { ProfileIcon } from "../../assets/icons/icons.jsx"
 
 function TopNav() {
   return (
@@ -17,25 +17,34 @@ function TopNav() {
       </NavLink>
 
       <div className="top-nav-links">
-        <Button variant="ghost" asChild>
-          <NavLink to="/home">Hem</NavLink>
-        </Button>
+        <NavLink
+          to="/home"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          Hem
+        </NavLink>
 
-        <Button variant="ghost" asChild>
-          <NavLink to="/plan">Planera</NavLink>
-        </Button>
+        <NavLink
+          to="/plan"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          Planera
+        </NavLink>
 
-        <Button variant="ghost" asChild>
-          <NavLink to="/recipes">Recept</NavLink>
-        </Button>
+        <NavLink
+          to="/recipes"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          Recept
+        </NavLink>
 
-        <Button
-          variant="ghost"
-          size="icon"
+        <NavLink
+          to="/profile"
+          className={buttonVariants({ variant: "ghost", size: "icon" })}
           aria-label="Konto"
         >
           <ProfileIcon />
-        </Button>
+        </NavLink>
       </div>
     </nav>
   )

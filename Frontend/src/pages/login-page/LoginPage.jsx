@@ -1,9 +1,9 @@
 import "./LoginPage.css"
 import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "../../components/ui/button.jsx"
+import { Input } from "../../components/ui/input.jsx"
+import { Label } from "../../components/ui/label.jsx"
 
 function LoginPage() {
   return (

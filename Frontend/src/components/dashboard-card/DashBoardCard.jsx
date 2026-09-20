@@ -1,4 +1,4 @@
-import "./DashboardCard.css"
+import "./DashBoardCard.css"
 
 // Komponent för dashboard korten
 function DashboardCard({ children, className = "" }) {

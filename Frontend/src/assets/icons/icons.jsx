@@ -1,6 +1,6 @@
-import PersonIcon from "@mui/icons-material/Person";
+// Export with new names (preferens för mig)
+// Iconslib https://lucide.dev/icons/
+export { 
+    User as ProfileIcon,
 
-// Add icons used and import (personlig preferens)
-
-// User profile/account
-export const ProfileIcon = PersonIcon
+ } from "lucide-react"
