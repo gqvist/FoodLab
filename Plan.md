@@ -14,7 +14,7 @@ Planen för uppgiften är baserad på **Recipe Experiment Lab** från förslagen
 - Inloggning, utloggning, registrering
 - Dashboard (alla recept med betyg, filtrering (tid, betyg osv..) lägg till i dina recept)
 - Axios
-- Chadcn(?)
+- shadcn(?)
 
 ## Tankar och planering av DB
 
@@ -59,3 +59,9 @@ Man ska kunna spara andras recept. Kan visas genom Alla receptId med UserId X t.
  - UserId
  - RecipeId
  - SavedAt
+
+ **CheckListPages frontend**
+ - Login ✓
+ - Home
+ - all-recipe
+ - single-recipe

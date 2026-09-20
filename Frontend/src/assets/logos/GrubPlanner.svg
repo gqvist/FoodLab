@@ -1,0 +1,55 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="108 58 184 185"
+  role="img"
+  aria-labelledby="title"
+>
+  <title id="title">GrubPlanner</title>
+
+  <!-- Symmetrical plate -->
+  <g
+    fill="none"
+    stroke="#262626"
+    stroke-width="10"
+    stroke-linecap="round"
+  >
+    <path
+      d="M155 85
+         C130 102 115 130 115 160
+         C115 193 133 218 160 232"
+    />
+
+    <path
+      d="M245 85
+         C270 102 285 130 285 160
+         C285 193 267 218 240 232"
+    />
+  </g>
+
+  <!-- Fork -->
+  <g
+    fill="none"
+    stroke="#262626"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path
+      d="M175 65
+         V125
+         C175 145 185 155 200 155
+         C215 155 225 145 225 125
+         V65"
+      stroke-width="11"
+    />
+
+    <path
+      d="M200 65 V125"
+      stroke-width="11"
+    />
+
+    <path
+      d="M200 160 V235"
+      stroke-width="13"
+    />
+  </g>
+</svg>

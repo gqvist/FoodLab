@@ -1,0 +1,79 @@
+import "./FoodCalendar.css"
+
+import { useState } from "react"
+import dayjs from "dayjs"
+import isoWeek from "dayjs/plugin/isoWeek"
+
+import DashboardCard from "@/components/dashboard-card/DashboardCard"
+import { Button } from "@/components/ui/button"
+import { weekPlan } from "@/assets/test-data/homeTestData"
+
+// Använder dayjs för att få veckan
+dayjs.extend(isoWeek)
+
+// Få dagens dag och veckonummer
+function FoodCalendar() {
+  const [showAll, setShowAll] = useState(false)
+
+  const today = dayjs()
+  const weekNumber = today.isoWeek()
+
+  // Så att veckodagen skrivs ut
+  const currentDay = today.toDate().toLocaleDateString("sv-SE", {
+    weekday: "long",
+  })
+
+  return (
+    <DashboardCard>
+      <div className="food-calendar-header">
+        <div>
+          <h2>Vecka {weekNumber} matplan</h2>
+          <p>Planerade recept för den här veckan.</p>
+        </div>
+
+        <Button variant="outline">
+          Ändra planering
+        </Button>
+      </div>
+
+      <div
+        className={`food-calendar-grid ${
+          showAll ? "food-calendar-grid-expanded" : ""
+        }`}
+      >
+        {weekPlan.map((item) => {
+          const isToday =
+            item.day.toLowerCase() === currentDay.toLowerCase()
+
+          return (
+            <div
+              className={`food-calendar-day ${
+                isToday ? "food-calendar-day-today" : ""
+              }`}
+              key={item.day}
+            >
+              <span className="food-calendar-day-name">
+                {item.day}
+              </span>
+
+              <span className="food-calendar-recipe">
+                {item.recipe}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="food-calendar-expand">
+        <Button
+          variant="ghost"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "Visa mindre" : "Visa alla"}
+        </Button>
+      </div>
+    </DashboardCard>
+  )
+}
+
+export default FoodCalendar

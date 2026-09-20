@@ -1,0 +1,18 @@
+.dashboard-card {
+  width: 100%;
+  padding: 1.5rem;
+
+  background-color: var(--card);
+  color: var(--card-foreground);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+}
+
+@media (max-width: 600px) {
+  .dashboard-card {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,17 @@
+.home-page {
+  min-height: 100vh;
+
+  padding: calc(80px + 2rem) 2rem 2rem;
+
+  background-color: var(--muted);
+}
+
+.home-container {
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
