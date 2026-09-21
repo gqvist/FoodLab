@@ -1,29 +1,37 @@
 import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import "./SavedRecipes.css";
+import { Link } from "react-router-dom";
 
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
-import { Button } from "../ui/button.jsx";
+import { buttonVariants } from "../ui/button.jsx";
 import { useRecipes } from "../../lib/recipes/recipeContext";
 
-function SavedRecipes() {
+function SavedRecipes({ showAll = false }) {
   const { recipes, savedIds, currentUserId } = useRecipes();
   const savedRecipes = recipes.filter((recipe) =>
     savedIds.includes(recipe.id) && recipe.isPublic && recipe.ownerId !== currentUserId
   );
+  const visibleRecipes = showAll ? savedRecipes : savedRecipes.slice(0, 3);
+  const Heading = showAll ? "h1" : "h2";
   return (
     <DashboardCard>
       <div className="saved-recipes-header">
         <div>
-          <h2>Sparade recept</h2>
+          <Heading>Sparade recept</Heading>
           <p>Recept från andra användare som du har sparat.</p>
         </div>
 
-        <Button variant="outline">Visa alla</Button>
+        {!showAll && (
+          <Link to={`/pages/saved-recipes/${encodeURIComponent(currentUserId)}`}
+            className={buttonVariants({ variant: "outline" })}>
+            Visa alla
+          </Link>
+        )}
       </div>
 
       <div className="saved-recipes-grid">
-        {savedRecipes.map((recipe) => (
+        {visibleRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>

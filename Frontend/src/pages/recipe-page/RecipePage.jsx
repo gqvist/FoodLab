@@ -1,9 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TopNav from "../../components/top-nav/TopNav";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard";
 import { recipes } from "../../assets/test-data/homeTestData";
 import "./RecipePage.css";
-import { BackArrowIcon } from "@/assets/icons/icons";
+import BackLink from "../../components/back-link/BackLink";
 import RecipeSaveButton from "../../components/recipe-card/RecipeSaveButton";
 import RecipeRating from "../../components/recipe-rating/RecipeRating";
 import { RatingIcon } from "../../assets/icons/icons";
@@ -67,12 +67,7 @@ export default function RecipePage() {
               <h1>Receptet hittades inte.</h1>
             </DashboardCard>
           )}
-          <div className="recipe-back">
-            <Link to="/home" className="recipe-back-link" aria-label="Till startsidan">
-              <BackArrowIcon aria-hidden="true" />
-            </Link>
-            <span>Till startsidan</span>
-          </div>
+          <BackLink />
         </div>
       </main>
     </>

@@ -12,28 +12,6 @@
   gap: 1.5rem;
 }
 
-.recipe-back {
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: small;
-  color: var(--muted-foreground);
-  text-decoration: none;
-}
-
-.recipe-back-link {
-  display: inline-flex;
-  color: #000;
-  transition: color 0.2s ease;
-}
-
-.recipe-back-link:hover,
-.recipe-back-link:focus-visible {
-  color: #737373;
-}
-
 .recipe-details {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);

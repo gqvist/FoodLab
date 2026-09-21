@@ -1,32 +1,41 @@
 import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import "./MyRecipes.css";
+import { Link } from "react-router-dom";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
-import { Button } from "../ui/button.jsx";
+import { Button, buttonVariants } from "../ui/button.jsx";
 import { useRecipes } from "../../lib/recipes/recipeContext";
 
-function MyRecipes() {
+function MyRecipes({ showAll = false }) {
   const { recipes, currentUserId } = useRecipes();
   const myRecipes = recipes.filter((recipe) => recipe.ownerId === currentUserId);
+  const visibleRecipes = showAll ? myRecipes : myRecipes.slice(0, 3);
+  const Heading = showAll ? "h1" : "h2";
   return (
     <DashboardCard>
       <div className="my-recipes-header">
         <div>
-          <h2>Mina recept</h2>
+          <Heading>Mina recept</Heading>
           <p>Recept som du har skapat.</p>
         </div>
 
         <div className="my-recipes-actions">
           <Button>+ Nytt recept</Button>
-          <Button variant="outline">Visa alla</Button>
+          {!showAll && (
+            <Link to={`/pages/my-recipes/${encodeURIComponent(currentUserId)}`}
+              className={buttonVariants({ variant: "outline" })}>
+              Visa alla
+            </Link>
+          )}
         </div>
       </div>
 
       <div className="my-recipes-grid">
-        {myRecipes.map((recipe) => (
+        {visibleRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>
+      {!myRecipes.length && <p>Du har inte skapat några recept ännu.</p>}
     </DashboardCard>
   );
 }
