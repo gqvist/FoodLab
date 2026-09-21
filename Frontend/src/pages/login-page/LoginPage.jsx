@@ -8,7 +8,6 @@ import { login } from "../../lib/auth/login.js";
 import { Button } from "../../components/ui/button.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
-import { Type } from "lucide-react";
 
 function LoginPage() {
   const navigate = useNavigate();
