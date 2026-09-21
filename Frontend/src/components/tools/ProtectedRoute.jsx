@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { getCurrentUser } from "../lib/auth/getCurrentUser.js";
+import { getCurrentUser } from "../../lib/auth/getCurrentUser.js";
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
