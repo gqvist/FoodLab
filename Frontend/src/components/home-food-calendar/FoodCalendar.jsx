@@ -1,12 +1,13 @@
 import "./FoodCalendar.css";
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
 import { Button } from "../ui/button.jsx";
-import { weekPlan } from "../../assets/test-data/homeTestData.js";
+import { weekPlan, recipes } from "../../assets/test-data/homeTestData.js";
 
 // Använder dayjs för att få veckan
 dayjs.extend(isoWeek);
@@ -41,9 +42,12 @@ function FoodCalendar() {
       >
         {weekPlan.map((item) => {
           const isToday = item.day.toLowerCase() === currentDay.toLowerCase();
+          const recipe = recipes.find((recipe) => recipe.id === item.recipeId);
+          if (!recipe) return null;
 
           return (
-            <div
+            <Link
+              to={`/recipe/${recipe.id}`}
               className={`food-calendar-day ${
                 isToday ? "food-calendar-day-today" : ""
               }`}
@@ -51,8 +55,8 @@ function FoodCalendar() {
             >
               <span className="food-calendar-day-name">{item.day}</span>
 
-              <span className="food-calendar-recipe">{item.recipe}</span>
-            </div>
+              <span className="food-calendar-recipe">{recipe.name}</span>
+            </Link>
           );
         })}
       </div>

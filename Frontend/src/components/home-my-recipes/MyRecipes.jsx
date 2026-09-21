@@ -1,10 +1,13 @@
+import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import "./MyRecipes.css";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
 import { Button } from "../ui/button.jsx";
-import { myRecipes } from "../../assets/test-data/homeTestData.js";
+import { useRecipes } from "../../lib/recipes/recipeContext";
 
 function MyRecipes() {
+  const { recipes, currentUserId } = useRecipes();
+  const myRecipes = recipes.filter((recipe) => recipe.ownerId === currentUserId);
   return (
     <DashboardCard>
       <div className="my-recipes-header">
@@ -13,19 +16,15 @@ function MyRecipes() {
           <p>Recept som du har skapat.</p>
         </div>
 
-        <Button>+ Nytt recept</Button>
+        <div className="my-recipes-actions">
+          <Button>+ Nytt recept</Button>
+          <Button variant="outline">Visa alla</Button>
+        </div>
       </div>
 
       <div className="my-recipes-grid">
         {myRecipes.map((recipe) => (
-          <div className="my-recipe-card" key={recipe.id}>
-            <h3>{recipe.name}</h3>
-
-            <div className="my-recipe-info">
-              <span>{recipe.cookingTimeMinutes} min</span>
-              <span>★ {recipe.rating}</span>
-            </div>
-          </div>
+          <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>
     </DashboardCard>

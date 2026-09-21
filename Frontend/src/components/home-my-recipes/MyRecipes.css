@@ -19,42 +19,16 @@
   color: var(--muted-foreground);
 }
 
+.my-recipes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .my-recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.my-recipe-card {
-  padding: 1.25rem;
-
-  background-color: var(--background);
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-
-  cursor: pointer;
-
-  transition: background-color 0.2s ease;
-}
-
-.my-recipe-card:hover {
-  background-color: var(--accent);
-}
-
-.my-recipe-card h3 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.my-recipe-info {
-  display: flex;
-  justify-content: space-between;
-
-  margin-top: 1.5rem;
-
-  font-size: 0.875rem;
-  color: var(--muted-foreground);
+  gap: var(--dashboard-gap);
 }
 
 /* Tablet och mobil */

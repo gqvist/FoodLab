@@ -1,10 +1,16 @@
+import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import "./SavedRecipes.css";
+
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
 import { Button } from "../ui/button.jsx";
-import { savedRecipes } from "../../assets/test-data/homeTestData.js";
+import { useRecipes } from "../../lib/recipes/recipeContext";
 
 function SavedRecipes() {
+  const { recipes, savedIds, currentUserId } = useRecipes();
+  const savedRecipes = recipes.filter((recipe) =>
+    savedIds.includes(recipe.id) && recipe.isPublic && recipe.ownerId !== currentUserId
+  );
   return (
     <DashboardCard>
       <div className="saved-recipes-header">
@@ -18,16 +24,10 @@ function SavedRecipes() {
 
       <div className="saved-recipes-grid">
         {savedRecipes.map((recipe) => (
-          <div className="saved-recipe-card" key={recipe.id}>
-            <h3>{recipe.name}</h3>
-
-            <div className="saved-recipe-info">
-              <span>{recipe.cookingTimeMinutes} min</span>
-              <span>★ {recipe.rating}</span>
-            </div>
-          </div>
+          <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>
+      {!savedRecipes.length && <p>Du har inte sparat några recept ännu.</p>}
     </DashboardCard>
   );
 }
