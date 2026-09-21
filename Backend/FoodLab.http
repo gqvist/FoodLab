@@ -1,6 +1,6 @@
-@FoodLab_HostAddress = http://localhost:5278
+@FoodLab_HostAddress = https://localhost:7079
 
-GET {{FoodLab_HostAddress}}/weatherforecast/
+GET {{FoodLab_HostAddress}}/api/test
 Accept: application/json
 
 ###

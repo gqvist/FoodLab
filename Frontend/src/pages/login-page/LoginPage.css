@@ -54,3 +54,13 @@
 .no-account-button:focus-visible {
   text-decoration: underline;
 }
+
+.login-form .login-error {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid #b91c1c;
+  border-radius: 0.5rem;
+  background-color: #fef2f2;
+  color: #991b1b;
+  font-size: 0.875rem;
+}
