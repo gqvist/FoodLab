@@ -8,45 +8,38 @@ import ProfilePage from "./pages/profile-page/ProfilePage";
 import RecipePage from "./pages/recipe-page/RecipePage";
 import RecipesPage from "./pages/recipes-page/RecipesPage";
 import UserRecipesPage from "./pages/user-recipes-page/UserRecipesPage";
+import NewRecipePage from "./pages/new-recipe-page/NewRecipePage"
+import PageNotFound from "./pages/page-not-found/PageNotFound";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/recipe/:id" element={<RecipePage />} />
         <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/pages/my-recipes/:userId?" element={
-          <ProtectedRoute><UserRecipesPage kind="my" /></ProtectedRoute>
-        } />
-        <Route path="/pages/saved-recipes/:userId?" element={
-          <ProtectedRoute><UserRecipesPage kind="saved" /></ProtectedRoute>
-        } />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Navigate to="/home" replace />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/recipe/:id" element={<RecipePage />} />
+
+        {/* Private routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/recipe/new" element={<NewRecipePage />} />
+
+          <Route
+            path="/pages/my-recipes/:userId?"
+            element={<UserRecipesPage kind="my" />}
+          />
+          <Route
+            path="/pages/saved-recipes/:userId?"
+            element={<UserRecipesPage kind="saved" />}
+          />
+        </Route>
+
+        {/* 404 */}
+        <Route path="*" element={<PageNotFound/>} />
       </Routes>
     </BrowserRouter>
   );

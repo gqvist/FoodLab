@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { getCurrentUser } from "../../lib/auth/getCurrentUser.js";
 
-export default function ProtectedRoute({ children }) {
+export default function ProtectedRoute() {
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
@@ -41,5 +41,5 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return <Outlet />;
 }
