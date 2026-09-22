@@ -10,6 +10,7 @@ import RecipesPage from "./pages/recipes-page/RecipesPage";
 import UserRecipesPage from "./pages/user-recipes-page/UserRecipesPage";
 import NewRecipePage from "./pages/new-recipe-page/NewRecipePage"
 import PageNotFound from "./pages/page-not-found/PageNotFound";
+import PlanPage from "./pages/plan-page/PlanPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/recipe/new" element={<NewRecipePage />} />
+          <Route path="/plan" element={<PlanPage />} />
 
           <Route
             path="/pages/my-recipes/:userId?"

@@ -22,13 +22,13 @@
 .food-calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: var(--dashboard-gap);
+  gap: 0.5rem;
 }
 
 .food-calendar-day {
   color: inherit;
   text-decoration: none;
-  height: 120px;
+  height: 100px;
   padding: 1rem;
 
   display: flex;

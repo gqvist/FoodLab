@@ -1,0 +1,129 @@
+.plan-meals-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.plan-meals-header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.plan-meals-header p {
+  margin-top: 0.25rem;
+
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.plan-meals-filters {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.plan-meals-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.plan-meals-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.plan-meals-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.plan-meals-day {
+  width: 100%;
+  height: 100px;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  box-sizing: border-box;
+  overflow: hidden;
+
+  background-color: var(--background);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.plan-meals-day-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.plan-meals-randomize {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .plan-meals-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .plan-meals-filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .plan-meals-filter {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .plan-meals-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plan-meals-column {
+    position: relative;
+    gap: 0;
+  }
+
+  .plan-meals-day {
+    padding-right: 3rem;
+  }
+
+  .plan-meals-refresh {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .plan-meals-filters {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .plan-meals-grid {
+    grid-template-columns: 1fr;
+  }
+}

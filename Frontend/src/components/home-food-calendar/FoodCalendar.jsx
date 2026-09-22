@@ -3,21 +3,15 @@ import "./FoodCalendar.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import isoWeek from "dayjs/plugin/isoWeek";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
-import { Button } from "../ui/button.jsx";
+import { Button, buttonVariants } from "../ui/button.jsx";
 import { weekPlan, recipes } from "../../assets/test-data/homeTestData.js";
 
-// Använder dayjs för att få veckan
-dayjs.extend(isoWeek);
-
-// Få dagens dag och veckonummer
 function FoodCalendar() {
   const [showAll, setShowAll] = useState(false);
 
   const today = dayjs();
-  const weekNumber = today.isoWeek();
 
   // Så att veckodagen skrivs ut
   const currentDay = today.toDate().toLocaleDateString("sv-SE", {
@@ -28,11 +22,13 @@ function FoodCalendar() {
     <DashboardCard>
       <div className="food-calendar-header">
         <div>
-          <h2>Vecka {weekNumber} matplan</h2>
+          <h2>Veckans matplan</h2>
           <p>Planerade recept för den här veckan.</p>
         </div>
 
-        <Button variant="outline">Ändra planering</Button>
+        <Link to="/plan" className={buttonVariants({ variant: "outline" })}>
+          Ändra planering
+        </Link>
       </div>
 
       <div
