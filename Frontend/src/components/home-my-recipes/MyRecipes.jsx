@@ -3,12 +3,14 @@ import "./MyRecipes.css";
 import { Link } from "react-router-dom";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
-import { Button, buttonVariants } from "../ui/button.jsx";
+import { Button } from "../ui/button.jsx";
 import { useRecipes } from "../../lib/recipes/recipeContext";
 
 function MyRecipes({ showAll = false }) {
   const { recipes, currentUserId } = useRecipes();
-  const myRecipes = recipes.filter((recipe) => recipe.ownerId === currentUserId);
+  const myRecipes = recipes.filter(
+    (recipe) => recipe.ownerId === currentUserId,
+  );
   const visibleRecipes = showAll ? myRecipes : myRecipes.slice(0, 3);
   const Heading = showAll ? "h1" : "h2";
   return (
@@ -22,10 +24,16 @@ function MyRecipes({ showAll = false }) {
         <div className="my-recipes-actions">
           <Button>+ Nytt recept</Button>
           {!showAll && (
-            <Link to={`/pages/my-recipes/${encodeURIComponent(currentUserId)}`}
-              className={buttonVariants({ variant: "outline" })}>
-              Visa alla
-            </Link>
+            <Button
+              variant="outline"
+              render={
+                <Link
+                  to={`/pages/my-recipes/${encodeURIComponent(currentUserId)}`}
+                >
+                  Visa alla
+                </Link>
+              }
+            />
           )}
         </div>
       </div>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
-import { Button, buttonVariants } from "../ui/button.jsx";
+import { Button } from "../ui/button.jsx";
 import { weekPlan, recipes } from "../../assets/test-data/homeTestData.js";
 
 function FoodCalendar() {
@@ -26,9 +26,10 @@ function FoodCalendar() {
           <p>Planerade recept för den här veckan.</p>
         </div>
 
-        <Link to="/plan" className={buttonVariants({ variant: "outline" })}>
-          Ändra planering
-        </Link>
+        <Button
+          variant="outline"
+          render={<Link to="/plan">Ändra planering</Link>}
+        />
       </div>
 
       <div

@@ -2,15 +2,17 @@ import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import "./SavedRecipes.css";
 import { Link } from "react-router-dom";
 
-
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
-import { buttonVariants } from "../ui/button.jsx";
+import { Button } from "../ui/button.jsx";
 import { useRecipes } from "../../lib/recipes/recipeContext";
 
 function SavedRecipes({ showAll = false }) {
   const { recipes, savedIds, currentUserId } = useRecipes();
-  const savedRecipes = recipes.filter((recipe) =>
-    savedIds.includes(recipe.id) && recipe.isPublic && recipe.ownerId !== currentUserId
+  const savedRecipes = recipes.filter(
+    (recipe) =>
+      savedIds.includes(recipe.id) &&
+      recipe.isPublic &&
+      recipe.ownerId !== currentUserId,
   );
   const visibleRecipes = showAll ? savedRecipes : savedRecipes.slice(0, 3);
   const Heading = showAll ? "h1" : "h2";
@@ -23,10 +25,16 @@ function SavedRecipes({ showAll = false }) {
         </div>
 
         {!showAll && (
-          <Link to={`/pages/saved-recipes/${encodeURIComponent(currentUserId)}`}
-            className={buttonVariants({ variant: "outline" })}>
-            Visa alla
-          </Link>
+          <Button
+            variant="outline"
+            render={
+              <Link
+                to={`/pages/saved-recipes/${encodeURIComponent(currentUserId)}`}
+              >
+                Visa alla
+              </Link>
+            }
+          />
         )}
       </div>
 
