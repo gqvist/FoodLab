@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { getCurrentUser } from "../../lib/auth/getCurrentUser.js";
+import sadFaceError from "../../assets/logos/SadFaceError.svg";
+import { Spinner } from "../ui/spinner.jsx";
+import TopNav from "../top-nav/TopNav.jsx";
 
 export default function ProtectedRoute() {
   const [status, setStatus] = useState("loading");
@@ -30,11 +33,30 @@ export default function ProtectedRoute() {
   }, []);
 
   if (status === "loading") {
-    return <p>Kontrollerar inloggning...</p>;
+    return (
+      <>
+        <TopNav />
+        <main className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-3">
+          <Spinner className="size-6" />
+          <p>Kontrollerar inloggning...</p>
+        </main>
+      </>
+    );
   }
 
   if (status === "error") {
-    return <p role="alert">Kunde inte ansluta. Ladda om sidan för att försöka igen.</p>;
+    return (
+      <>
+        <TopNav />
+        <main
+          className="flex min-h-screen flex-col items-center justify-center gap-3 text-center"
+          role="alert"
+        >
+          <img src={sadFaceError} alt="" className="size-16" />
+          <p>Kunde inte ansluta till servern...</p>
+        </main>
+      </>
+    );
   }
 
   if (status === "unauthenticated") {
