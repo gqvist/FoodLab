@@ -1,8 +1,10 @@
+import "./RecipesPage.css";
+import { useRecipes } from "../../lib/recipes/recipeContext";
+
 import TopNav from "../../components/top-nav/TopNav";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard";
 import RecipeCard from "../../components/recipe-card/RecipeCard";
-import { useRecipes } from "../../lib/recipes/recipeContext";
-import "./RecipesPage.css";
+import BackLink from "@/components/back-link/BackLink";
 
 export default function RecipesPage() {
   const { recipes } = useRecipes();
@@ -19,6 +21,7 @@ export default function RecipesPage() {
           </div>
           {!publicRecipes.length && <p>Det finns inga offentliga recept ännu.</p>}
         </DashboardCard>
+        <BackLink />
       </div>
     </main>
   </>;

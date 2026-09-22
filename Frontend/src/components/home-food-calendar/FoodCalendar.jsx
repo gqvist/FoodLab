@@ -59,8 +59,8 @@ function FoodCalendar() {
       </div>
 
       <div className="food-calendar-expand">
-        <Button variant="ghost" onClick={() => setShowAll(!showAll)}>
-          {showAll ? "Visa mindre" : "Visa alla"}
+        <Button variant="outline" onClick={() => setShowAll(!showAll)}>
+          {showAll ? "Visa dagens måltid" : "Visa alla"}
         </Button>
       </div>
     </DashboardCard>

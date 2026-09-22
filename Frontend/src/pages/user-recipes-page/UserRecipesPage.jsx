@@ -22,7 +22,7 @@ export default function UserRecipesPage({ kind }) {
         <div className="user-recipes-container">
           {userId !== currentUserId ? (
             <DashboardCard>
-              <h1>Den här receptlistan tillhör en annan användare.</h1>
+              <h1>Försöker du komma åt en annan användares recept? ajabaja!</h1>
             </DashboardCard>
           ) : kind === "my" ? (
             <MyRecipes showAll />

@@ -22,7 +22,7 @@ function MyRecipes({ showAll = false }) {
         </div>
 
         <div className="my-recipes-actions">
-          <Button>+ Nytt recept</Button>
+          <Button render={<Link to="/recipe/new">+ Nytt recept</Link>} />
           {!showAll && (
             <Button
               variant="outline"
