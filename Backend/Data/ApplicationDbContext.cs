@@ -12,4 +12,140 @@ public class ApplicationDbContext
         : base(options)
     {
     }
+
+    public DbSet<Recipe> Recipes =>
+        Set<Recipe>();
+
+    public DbSet<RecipeIngredient> RecipeIngredients =>
+        Set<RecipeIngredient>();
+
+    public DbSet<SavedRecipe> SavedRecipes =>
+        Set<SavedRecipe>();
+
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        ConfigureRecipe(modelBuilder);
+        ConfigureRecipeIngredient(modelBuilder);
+        ConfigureSavedRecipe(modelBuilder);
+    }
+
+    private static void ConfigureRecipe(
+        ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Recipe>(entity =>
+        {
+            entity.HasKey(recipe => recipe.Id);
+
+            entity.Property(recipe => recipe.Name)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(recipe => recipe.Description)
+                .HasMaxLength(1000);
+
+            entity.Property(recipe => recipe.Instructions)
+                .IsRequired()
+                .HasMaxLength(10000);
+
+            entity.Property(recipe =>
+                    recipe.CookingTimeMinutes)
+                .IsRequired();
+
+            entity.Property(recipe => recipe.IsPublic)
+                .HasDefaultValue(false);
+
+            entity.Property(recipe => recipe.CreatedAt)
+                .IsRequired();
+
+            entity.Property(recipe => recipe.OwnerId)
+                .IsRequired();
+
+            entity.HasOne(recipe => recipe.Owner)
+                .WithMany(user => user.Recipes)
+                .HasForeignKey(recipe => recipe.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(recipe => recipe.Ingredients)
+                .WithOne(ingredient => ingredient.Recipe)
+                .HasForeignKey(ingredient =>
+                    ingredient.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(recipe => new
+            {
+                recipe.IsPublic,
+                recipe.CreatedAt
+            });
+
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_Recipes_CookingTimeMinutes",
+                    "[CookingTimeMinutes] > 0");
+            });
+        });
+    }
+
+    private static void ConfigureRecipeIngredient(
+        ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RecipeIngredient>(entity =>
+        {
+            entity.HasKey(ingredient => ingredient.Id);
+
+            entity.Property(ingredient => ingredient.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(ingredient => ingredient.Amount)
+                .HasPrecision(10, 2)
+                .IsRequired();
+
+            entity.Property(ingredient => ingredient.Unit)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_RecipeIngredients_Amount",
+                    "[Amount] > 0");
+            });
+        });
+    }
+
+    private static void ConfigureSavedRecipe(
+        ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<SavedRecipe>(entity =>
+        {
+            entity.HasKey(savedRecipe => new
+            {
+                savedRecipe.UserId,
+                savedRecipe.RecipeId
+            });
+
+            entity.Property(savedRecipe =>
+                    savedRecipe.SavedAt)
+                .IsRequired();
+
+            entity.HasOne(savedRecipe =>
+                    savedRecipe.User)
+                .WithMany(user => user.SavedRecipes)
+                .HasForeignKey(savedRecipe =>
+                    savedRecipe.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(savedRecipe =>
+                    savedRecipe.Recipe)
+                .WithMany(recipe =>
+                    recipe.SavedRecipes)
+                .HasForeignKey(savedRecipe =>
+                    savedRecipe.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
 }

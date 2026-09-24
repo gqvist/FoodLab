@@ -78,10 +78,46 @@ export const savedRecipes = [
 
 // All recipes available to the calendar and recipe detail page.
 export const recipes = [
-  ...myRecipes.map((recipe) => ({ ...recipe, ownerId: "demo-user", isPublic: recipe.id !== 3 })),
-  ...savedRecipes.map((recipe) => ({ ...recipe, ownerId: "demo-other", isPublic: true })),
-  { id: 7, name: "Tacos", cookingTimeMinutes: 25, rating: 4.3, ownerId: "demo-other", isPublic: true },
-  { id: 8, name: "Lax med potatis", cookingTimeMinutes: 40, rating: 4.6, ownerId: "demo-other", isPublic: true },
-  { id: 9, name: "Hemmagjord pizza", cookingTimeMinutes: 60, rating: 4.8, ownerId: "demo-other", isPublic: true },
-  { id: 10, name: "Burgare", cookingTimeMinutes: 30, rating: 4.2, ownerId: "demo-other", isPublic: true },
+  ...myRecipes.map((recipe) => ({
+    ...recipe,
+    ownerId: "demo-user",
+    isPublic: recipe.id !== 3,
+  })),
+  ...savedRecipes.map((recipe) => ({
+    ...recipe,
+    ownerId: "demo-other",
+    isPublic: true,
+  })),
+  {
+    id: 7,
+    name: "Tacos",
+    cookingTimeMinutes: 25,
+    rating: 4.3,
+    ownerId: "demo-other",
+    isPublic: true,
+  },
+  {
+    id: 8,
+    name: "Lax med potatis",
+    cookingTimeMinutes: 40,
+    rating: 4.6,
+    ownerId: "demo-other",
+    isPublic: true,
+  },
+  {
+    id: 9,
+    name: "Hemmagjord pizza",
+    cookingTimeMinutes: 60,
+    rating: 4.8,
+    ownerId: "demo-other",
+    isPublic: true,
+  },
+  {
+    id: 10,
+    name: "Burgare",
+    cookingTimeMinutes: 30,
+    rating: 4.2,
+    ownerId: "demo-other",
+    isPublic: true,
+  },
 ];

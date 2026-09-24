@@ -26,14 +26,9 @@ function SavedRecipes({ showAll = false }) {
 
         {!showAll && (
           <Button
+            nativeButton={false}
             variant="outline"
-            render={
-              <Link
-                to={`/pages/saved-recipes/${encodeURIComponent(currentUserId)}`}
-              >
-                Visa alla
-              </Link>
-            }
+            render={<Link to="/saved-recipes">Visa alla</Link>}
           />
         )}
       </div>
@@ -43,7 +38,7 @@ function SavedRecipes({ showAll = false }) {
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>
-      {!savedRecipes.length && <p>Du har inte sparat några recept ännu.</p>}
+      {!savedRecipes.length && <p>Du har inga sparade recept...</p>}
     </DashboardCard>
   );
 }

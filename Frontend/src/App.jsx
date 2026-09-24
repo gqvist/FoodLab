@@ -8,7 +8,7 @@ import ProfilePage from "./pages/profile-page/ProfilePage";
 import RecipePage from "./pages/recipe-page/RecipePage";
 import RecipesPage from "./pages/recipes-page/RecipesPage";
 import UserRecipesPage from "./pages/user-recipes-page/UserRecipesPage";
-import NewRecipePage from "./pages/new-recipe-page/NewRecipePage"
+import NewRecipePage from "./pages/new-recipe-page/NewRecipePage";
 import PageNotFound from "./pages/page-not-found/PageNotFound";
 import PlanPage from "./pages/plan-page/PlanPage";
 
@@ -30,18 +30,15 @@ function App() {
           <Route path="/recipe/new" element={<NewRecipePage />} />
           <Route path="/plan" element={<PlanPage />} />
 
+          <Route path="/my-recipes" element={<UserRecipesPage kind="my" />} />
           <Route
-            path="/pages/my-recipes/:userId?"
-            element={<UserRecipesPage kind="my" />}
-          />
-          <Route
-            path="/pages/saved-recipes/:userId?"
+            path="/saved-recipes"
             element={<UserRecipesPage kind="saved" />}
           />
         </Route>
 
         {/* 404 */}
-        <Route path="*" element={<PageNotFound/>} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

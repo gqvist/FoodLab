@@ -24,7 +24,7 @@ function PlanMeals() {
     all: false,
   });
 
-// Handle the logic with switch toggle logic with "alla recept"
+  // Handle the logic with switch toggle logic with "alla recept"
   function handleAllRecipesChange(checked) {
     setRecipeFilters((currentFilters) => ({
       ...currentFilters,
@@ -33,7 +33,7 @@ function PlanMeals() {
     }));
   }
 
-// Handle the logic with switch toggle logic with "alla recept"
+  // Handle the logic with switch toggle logic with "alla recept"
   function handleRecipeFilterChange(filter, checked) {
     setRecipeFilters((currentFilters) => ({
       ...currentFilters,
@@ -50,7 +50,11 @@ function PlanMeals() {
           <p>Slumpa veckans mat enskilt eller alla samtidigt.</p>
         </div>
 
-        <div className="plan-meals-filters" role="group" aria-label="Välj recept">
+        <div
+          className="plan-meals-filters"
+          role="group"
+          aria-label="Välj recept"
+        >
           <label className="plan-meals-filter" htmlFor="own-recipes">
             <span>Dina recept</span>
             <Switch

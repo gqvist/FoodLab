@@ -1,9 +1,10 @@
 import "./NewRecipePage.css";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TopNav from "../../components/top-nav/TopNav.jsx";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard.jsx";
-import BackLink from "@/components/back-link/BackLink";
+import { createRecipe } from "../../lib/recipes/createRecipe.js";
 import { Button } from "../../components/ui/button.jsx";
 import {
   Combobox,
@@ -33,7 +34,11 @@ const measurementUnits = [
 ];
 
 function NewRecipePage() {
+  const navigate = useNavigate();
   const [ingredients, setIngredients] = useState([{ id: 1, unit: null }]);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
 
   function addIngredient() {
     setIngredients((currentIngredients) => {
@@ -53,8 +58,49 @@ function NewRecipePage() {
 
   function removeIngredient(id) {
     setIngredients((currentIngredients) =>
-      currentIngredients.filter((ingredient) => ingredient.id !== id),
+      currentIngredients.length === 1
+        ? currentIngredients
+        : currentIngredients.filter((ingredient) => ingredient.id !== id),
     );
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (ingredients.some((ingredient) => !ingredient.unit)) {
+      setError("Välj en måttenhet för varje ingrediens.");
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const recipe = {
+      name: formData.get("name").trim(),
+      description: formData.get("description").trim(),
+      cookingTimeMinutes: Number(formData.get("cookingTimeMinutes")),
+      isPrivate,
+      instructions: formData.get("instructions").trim(),
+      ingredients: ingredients.map((ingredient, index) => ({
+        name: formData.get(`ingredients[${index}].name`).trim(),
+        amount: Number(formData.get(`ingredients[${index}].amount`)),
+        unit: ingredient.unit,
+      })),
+    };
+
+    setError("");
+    setIsSaving(true);
+
+    try {
+      const createdRecipe = await createRecipe(recipe);
+      navigate(`/recipe/${createdRecipe.id}`, { replace: true });
+    } catch (submitError) {
+      setError(
+        submitError instanceof TypeError
+          ? "Kunde inte ansluta till servern. Försök igen."
+          : submitError.message,
+      );
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -62,121 +108,166 @@ function NewRecipePage() {
       <TopNav />
 
       <main className="new-recipe-page">
-        <div className="new-recipe-container">
-          <DashboardCard className="new-recipe-details">
-            <div className="new-recipe-fields">
-              <div className="new-recipe-field">
-                <Input
-                  className="h-10 text-lg md:text-lg"
-                  id="recipe-name"
-                  name="name"
-                  type="text"
-                  placeholder="Namnet på ditt recept..."
-                />
-              </div>
-
-              <div className="new-recipe-field">
-                <Textarea
-                  id="recipe-description"
-                  name="description"
-                  placeholder="Beskriv receptet kort..."
-                />
-              </div>
-
-              <div className="new-recipe-private">
-                <Label htmlFor="private-recipe">Gör receptet privat</Label>
-                <Switch id="private-recipe" name="isPrivate" size="sm" />
-              </div>
-            </div>
-          </DashboardCard>
-
-          <DashboardCard className="new-recipe-steps">
-            <Textarea
-              className="new-recipe-steps-input"
-              id="recipe-steps"
-              name="steps"
-              placeholder="Beskriv hur man tillagar ditt recept"
-            />
-          </DashboardCard>
-
-          <DashboardCard className="new-recipe-ingredients">
-            <div className="new-recipe-card-header">
-              <h2>Ingredienser</h2>
-              <p>Lägg till ingredienser.</p>
-            </div>
-
-            <div className="new-recipe-ingredient-list">
-              {ingredients.map((ingredient, index) => (
-                <div className="new-recipe-ingredient" key={ingredient.id}>
+        <form onSubmit={handleSubmit}>
+          <div className="new-recipe-container">
+            <DashboardCard className="new-recipe-details">
+              <div className="new-recipe-fields">
+                <div className="new-recipe-field">
                   <Input
-                    name={`ingredients[${index}].name`}
+                    className="h-10 text-lg md:text-lg"
+                    id="recipe-name"
+                    name="name"
                     type="text"
-                    placeholder="Ingrediens"
-                    aria-label={`Ingrediens ${index + 1}`}
+                    minLength="2"
+                    maxLength="150"
+                    placeholder="Namnet på ditt recept..."
+                    required
                   />
-
-                  <Input
-                    name={`ingredients[${index}].amount`}
-                    type="number"
-                    min="0"
-                    step="any"
-                    placeholder="Mängd"
-                    aria-label={`Mängd för ingrediens ${index + 1}`}
-                  />
-
-                  <Combobox
-                    items={measurementUnits}
-                    name={`ingredients[${index}].unit`}
-                    value={ingredient.unit}
-                    onValueChange={(unit) =>
-                      updateIngredientUnit(ingredient.id, unit)
-                    }
-                  >
-                    <ComboboxInput
-                      className="new-recipe-unit"
-                      placeholder="Enhet"
-                      aria-label={`Måttenhet för ingrediens ${index + 1}`}
-                    />
-                    <ComboboxContent>
-                      <ComboboxEmpty>Ingen enhet hittades.</ComboboxEmpty>
-                      <ComboboxList>
-                        {(unit) => (
-                          <ComboboxItem value={unit} key={unit}>
-                            {unit}
-                          </ComboboxItem>
-                        )}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
-
-                  <Button
-                    className="new-recipe-remove-ingredient"
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    aria-label={`Ta bort ingrediens ${index + 1}`}
-                    onClick={() => removeIngredient(ingredient.id)}
-                  >
-                    <RemoveIcon aria-hidden="true" />
-                  </Button>
                 </div>
-              ))}
-            </div>
 
-            <Button
-              className="new-recipe-add-ingredient"
-              type="button"
-              variant="outline"
-              onClick={addIngredient}
-            >
-              + Lägg till fler
+                <div className="new-recipe-field">
+                  <Textarea
+                    id="recipe-description"
+                    name="description"
+                    maxLength="1000"
+                    placeholder="Beskriv receptet kort..."
+                  />
+                </div>
+
+                <div className="new-recipe-options">
+                  <div className="new-recipe-cooking-time">
+                    <Input
+                      id="recipe-cooking-time"
+                      name="cookingTimeMinutes"
+                      type="number"
+                      min="1"
+                      max="1440"
+                      step="1"
+                      placeholder="Tillagningstid"
+                      aria-label="Tillagningstid i minuter"
+                      aria-describedby="recipe-cooking-time-unit"
+                      required
+                    />
+
+                    <span id="recipe-cooking-time-unit">minuter</span>
+                  </div>
+
+                  <div className="new-recipe-private">
+                    <Label htmlFor="private-recipe">Gör receptet privat</Label>
+                    <Switch
+                      id="private-recipe"
+                      name="isPrivate"
+                      size="sm"
+                      checked={isPrivate}
+                      onCheckedChange={setIsPrivate}
+                    />
+                  </div>
+                </div>
+              </div>
+            </DashboardCard>
+
+            <DashboardCard className="new-recipe-instructions">
+              <Textarea
+                className="new-recipe-instructions-input"
+                id="recipe-instructions"
+                name="instructions"
+                maxLength="10000"
+                placeholder="Beskriv hur man tillagar ditt recept"
+                required
+              />
+            </DashboardCard>
+
+            <DashboardCard className="new-recipe-ingredients">
+              <div className="new-recipe-card-header">
+                <h2>Ingredienser</h2>
+                <p>Lägg till ingredienser.</p>
+              </div>
+
+              <div className="new-recipe-ingredient-list">
+                {ingredients.map((ingredient, index) => (
+                  <div className="new-recipe-ingredient" key={ingredient.id}>
+                    <Input
+                      name={`ingredients[${index}].name`}
+                      type="text"
+                      maxLength="100"
+                      placeholder="Ingrediens"
+                      aria-label={`Ingrediens ${index + 1}`}
+                      required
+                    />
+
+                    <Input
+                      name={`ingredients[${index}].amount`}
+                      type="number"
+                      min="0.01"
+                      step="any"
+                      placeholder="Mängd"
+                      aria-label={`Mängd för ingrediens ${index + 1}`}
+                      required
+                    />
+
+                    <Combobox
+                      items={measurementUnits}
+                      name={`ingredients[${index}].unit`}
+                      value={ingredient.unit}
+                      onValueChange={(unit) =>
+                        updateIngredientUnit(ingredient.id, unit)
+                      }
+                    >
+                      <ComboboxInput
+                        className="new-recipe-unit"
+                        placeholder="Enhet"
+                        aria-label={`Måttenhet för ingrediens ${index + 1}`}
+                        required
+                      />
+                      <ComboboxContent>
+                        <ComboboxEmpty>Ingen enhet hittades.</ComboboxEmpty>
+                        <ComboboxList>
+                          {(unit) => (
+                            <ComboboxItem value={unit} key={unit}>
+                              {unit}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
+
+                    <Button
+                      className="new-recipe-remove-ingredient"
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label={`Ta bort ingrediens ${index + 1}`}
+                      onClick={() => removeIngredient(ingredient.id)}
+                      disabled={ingredients.length === 1}
+                    >
+                      <RemoveIcon aria-hidden="true" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                className="new-recipe-add-ingredient"
+                type="button"
+                variant="outline"
+                onClick={addIngredient}
+              >
+                + Lägg till fler
+              </Button>
+            </DashboardCard>
+          </div>
+
+          <div className="new-recipe-actions">
+            {error && (
+              <p className="new-recipe-error" role="alert">
+                {error}
+              </p>
+            )}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? "Sparar..." : "Spara recept"}
             </Button>
-          </DashboardCard>
-        </div>
-
-        <div className="new-recipe-actions">
-          <Button type="button">Spara recept</Button>
-        </div>
+          </div>
+        </form>
       </main>
     </>
   );

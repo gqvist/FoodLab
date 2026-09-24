@@ -6,6 +6,8 @@ import RecipeProvider from "./lib/recipes/RecipeProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RecipeProvider><App /></RecipeProvider>
-  </StrictMode>
+    <RecipeProvider>
+      <App />
+    </RecipeProvider>
+  </StrictMode>,
 );

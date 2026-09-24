@@ -34,6 +34,7 @@ builder.Services
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RecipeService>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

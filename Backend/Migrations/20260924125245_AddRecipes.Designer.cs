@@ -4,6 +4,7 @@ using FoodLab.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLab.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260924125245_AddRecipes")]
+    partial class AddRecipes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,24 +174,6 @@ namespace FoodLab.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FoodLab.Models.SavedRecipe", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("SavedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("UserId", "RecipeId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("SavedRecipes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -344,25 +329,6 @@ namespace FoodLab.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("FoodLab.Models.SavedRecipe", b =>
-                {
-                    b.HasOne("FoodLab.Models.Recipe", "Recipe")
-                        .WithMany("SavedRecipes")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FoodLab.Models.ApplicationUser", "User")
-                        .WithMany("SavedRecipes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Recipe");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -417,15 +383,11 @@ namespace FoodLab.Migrations
             modelBuilder.Entity("FoodLab.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Recipes");
-
-                    b.Navigation("SavedRecipes");
                 });
 
             modelBuilder.Entity("FoodLab.Models.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
-
-                    b.Navigation("SavedRecipes");
                 });
 #pragma warning restore 612, 618
         }
