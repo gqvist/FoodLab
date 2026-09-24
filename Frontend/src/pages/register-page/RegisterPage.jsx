@@ -1,11 +1,13 @@
 import "./RegisterPage.css";
-import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "../../components/ui/button.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { register } from "../../lib/auth/register.js";
+import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
 
 export default function RegisterPage() {
   const navigate = useNavigate();

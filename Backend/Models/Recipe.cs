@@ -14,8 +14,7 @@ public class Recipe
 
     public string Instructions { get; set; } = string.Empty;
 
-    public DateTimeOffset CreatedAt { get; set; }
-        = DateTimeOffset.UtcNow;
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     public string OwnerId { get; set; } = string.Empty;
 

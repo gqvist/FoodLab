@@ -1,9 +1,10 @@
 import "./TopNav.css";
-import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
 
 import { NavLink } from "react-router-dom";
+
 import { buttonVariants } from "../ui/button.jsx";
 import { ProfileIcon } from "../../assets/icons/icons.jsx";
+import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
 
 function TopNav() {
   return (

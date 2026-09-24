@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
-import { RatingIcon } from "../../assets/icons/icons";
-import RecipeSaveButton from "./RecipeSaveButton";
 import "./RecipeCard.css";
 
-export default function RecipeCard({ recipe }) {
+import { Link } from "react-router-dom";
+
+import { RatingIcon } from "../../assets/icons/icons";
+import RecipeSaveButton from "./RecipeSaveButton";
+
+export default function RecipeCard({ recipe, onSavedChange }) {
   return (
     <article className="recipe-card">
       <Link to={`/recipe/${recipe.id}`} className="recipe-card-link">
@@ -23,7 +25,7 @@ export default function RecipeCard({ recipe }) {
         </div>
       </Link>
       <div className="recipe-card-action">
-        <RecipeSaveButton recipe={recipe} />
+        <RecipeSaveButton recipe={recipe} onSavedChange={onSavedChange} />
       </div>
     </article>
   );

@@ -4,26 +4,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodLab.Data;
 
-public class ApplicationDbContext
-    : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
-    public DbSet<Recipe> Recipes =>
-        Set<Recipe>();
+    public DbSet<Recipe> Recipes => Set<Recipe>();
 
-    public DbSet<RecipeIngredient> RecipeIngredients =>
-        Set<RecipeIngredient>();
+    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
 
-    public DbSet<SavedRecipe> SavedRecipes =>
-        Set<SavedRecipe>();
+    public DbSet<SavedRecipe> SavedRecipes => Set<SavedRecipe>();
 
-    protected override void OnModelCreating(
-        ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
@@ -32,8 +25,7 @@ public class ApplicationDbContext
         ConfigureSavedRecipe(modelBuilder);
     }
 
-    private static void ConfigureRecipe(
-        ModelBuilder modelBuilder)
+    private static void ConfigureRecipe(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Recipe>(entity =>
         {
@@ -70,8 +62,7 @@ public class ApplicationDbContext
 
             entity.HasMany(recipe => recipe.Ingredients)
                 .WithOne(ingredient => ingredient.Recipe)
-                .HasForeignKey(ingredient =>
-                    ingredient.RecipeId)
+                .HasForeignKey(ingredient => ingredient.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(recipe => new
@@ -89,8 +80,7 @@ public class ApplicationDbContext
         });
     }
 
-    private static void ConfigureRecipeIngredient(
-        ModelBuilder modelBuilder)
+    private static void ConfigureRecipeIngredient(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<RecipeIngredient>(entity =>
         {
@@ -117,8 +107,7 @@ public class ApplicationDbContext
         });
     }
 
-    private static void ConfigureSavedRecipe(
-        ModelBuilder modelBuilder)
+    private static void ConfigureSavedRecipe(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<SavedRecipe>(entity =>
         {
@@ -128,23 +117,17 @@ public class ApplicationDbContext
                 savedRecipe.RecipeId
             });
 
-            entity.Property(savedRecipe =>
-                    savedRecipe.SavedAt)
+            entity.Property(savedRecipe => savedRecipe.SavedAt)
                 .IsRequired();
 
-            entity.HasOne(savedRecipe =>
-                    savedRecipe.User)
+            entity.HasOne(savedRecipe => savedRecipe.User)
                 .WithMany(user => user.SavedRecipes)
-                .HasForeignKey(savedRecipe =>
-                    savedRecipe.UserId)
+                .HasForeignKey(savedRecipe => savedRecipe.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(savedRecipe =>
-                    savedRecipe.Recipe)
-                .WithMany(recipe =>
-                    recipe.SavedRecipes)
-                .HasForeignKey(savedRecipe =>
-                    savedRecipe.RecipeId)
+            entity.HasOne(savedRecipe => savedRecipe.Recipe)
+                .WithMany(recipe => recipe.SavedRecipes)
+                .HasForeignKey(savedRecipe => savedRecipe.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }

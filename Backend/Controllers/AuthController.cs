@@ -14,9 +14,7 @@ public class AuthController : ControllerBase
     private readonly AuthService _authService;
     private readonly IAntiforgery _antiforgery;
 
-    public AuthController(
-        AuthService authService,
-        IAntiforgery antiforgery)
+    public AuthController(AuthService authService, IAntiforgery antiforgery)
     {
         _authService = authService;
         _antiforgery = antiforgery;
@@ -24,9 +22,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("csrf")]
-    [ResponseCache(
-        NoStore = true,
-        Location = ResponseCacheLocation.None)]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public ActionResult<CsrfTokenResponseDto> GetCsrfToken()
     {
         var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
@@ -39,8 +35,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult<UserResponseDto>> Login(
-        LoginRequestDto request)
+    public async Task<ActionResult<UserResponseDto>> Login(LoginRequestDto request)
     {
         var user = await _authService.LoginAsync(request);
 
@@ -49,16 +44,14 @@ public class AuthController : ControllerBase
             return Problem(
                 statusCode: StatusCodes.Status401Unauthorized,
                 title: "Inloggning misslyckades",
-                detail: "Kan inte logga in med dessa inloggningsuppgifter.");
+                detail: "Felaktiga inloggningsuppgifter.");
         }
 
         return Ok(user);
     }
 
     [HttpGet("me")]
-    [ResponseCache(
-    NoStore = true,
-    Location = ResponseCacheLocation.None)]
+    [ResponseCache( NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<ActionResult<UserResponseDto>> GetMe()
     {
         var user = await _authService.GetCurrentUserAsync(User);
@@ -81,11 +74,8 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    [ProducesResponseType(
-    typeof(UserResponseDto),
-    StatusCodes.Status201Created)]
-    public async Task<ActionResult<UserResponseDto>> Register(
-    RegisterRequestDto request)
+    [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status201Created)]
+    public async Task<ActionResult<UserResponseDto>> Register(RegisterRequestDto request)
     {
         var (result, user) = await _authService.RegisterAsync(request);
 
@@ -106,6 +96,7 @@ public class AuthController : ControllerBase
                 statusCode: duplicateAccount
                     ? StatusCodes.Status409Conflict
                     : StatusCodes.Status400BadRequest,
+
                 modelStateDictionary: ModelState);
         }
 

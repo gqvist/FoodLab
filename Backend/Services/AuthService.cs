@@ -12,21 +12,16 @@ public class AuthService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ApplicationDbContext _dbContext;
 
-    public AuthService(
-    UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager,
-    ApplicationDbContext dbContext)
+    public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _dbContext = dbContext;
     }
 
-    public async Task<UserResponseDto?> LoginAsync(
-        LoginRequestDto request)
+    public async Task<UserResponseDto?> LoginAsync(LoginRequestDto request)
     {
-        var user = await _userManager.FindByEmailAsync(
-            request.Email.Trim());
+        var user = await _userManager.FindByEmailAsync(request.Email.Trim());
 
         if (user is null)
         {
@@ -54,8 +49,7 @@ public class AuthService
         };
     }
 
-    public async Task<UserResponseDto?> GetCurrentUserAsync(
-    ClaimsPrincipal principal)
+    public async Task<UserResponseDto?> GetCurrentUserAsync(ClaimsPrincipal principal)
     {
         var user = await _userManager.GetUserAsync(principal);
 
@@ -77,8 +71,7 @@ public class AuthService
     public async Task<(IdentityResult Result, UserResponseDto? User)>
         RegisterAsync(RegisterRequestDto request)
     {
-        await using var transaction =
-            await _dbContext.Database.BeginTransactionAsync();
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
         var email = request.Email.Trim();
 
@@ -88,18 +81,14 @@ public class AuthService
             Email = email
         };
 
-        var createResult = await _userManager.CreateAsync(
-            user,
-            request.Password);
+        var createResult = await _userManager.CreateAsync(user,request.Password);
 
         if (!createResult.Succeeded)
         {
             return (createResult, null);
         }
 
-        var roleResult = await _userManager.AddToRoleAsync(
-            user,
-            "User");
+        var roleResult = await _userManager.AddToRoleAsync(user, "User");
 
         if (!roleResult.Succeeded)
         {

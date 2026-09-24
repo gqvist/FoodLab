@@ -1,12 +1,15 @@
 import "./ProfilePage.css";
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Button } from "../../components/ui/button.jsx";
+import { logout } from "../../lib/auth/logout.js";
 import TopNav from "../../components/top-nav/TopNav";
 import MyRecipes from "../../components/home-my-recipes/MyRecipes";
 import SavedRecipes from "../../components/home-saved-recipes/SavedRecipes";
 import ShoppingList from "../../components/home-shopping-list/ShoppingList";
-import { Button } from "../../components/ui/button.jsx";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../../lib/auth/logout.js";
+
 
 export default function ProfilePage() {
   const navigate = useNavigate();

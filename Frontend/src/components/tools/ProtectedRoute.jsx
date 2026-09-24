@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+
 import { getCurrentUser } from "../../lib/auth/getCurrentUser.js";
-import sadFaceError from "../../assets/logos/SadFaceError.svg";
 import { Spinner } from "../ui/spinner.jsx";
+import sadFaceError from "../../assets/logos/SadFaceError.svg";
 import TopNav from "../top-nav/TopNav.jsx";
 
 export default function ProtectedRoute() {

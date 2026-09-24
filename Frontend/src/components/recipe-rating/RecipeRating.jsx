@@ -1,7 +1,9 @@
+import "./RecipeRating.css";
+
 import { useId, useState } from "react";
+
 import { RatingIcon } from "../../assets/icons/icons";
 import { useRecipes } from "../../lib/recipes/recipeContext";
-import "./RecipeRating.css";
 
 export default function RecipeRating({ recipe }) {
   const { currentUserId, ratings, rateRecipe } = useRecipes();

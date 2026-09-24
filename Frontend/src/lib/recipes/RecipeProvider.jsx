@@ -3,7 +3,6 @@ import { RecipeContext } from "./recipeContext";
 
 export default function RecipeProvider({ children }) {
   const [recipes] = useState([]);
-  const [savedIds, setSavedIds] = useState([]);
   const [ratings, setRatings] = useState({});
   const currentUserId = null;
 
@@ -14,17 +13,20 @@ export default function RecipeProvider({ children }) {
     );
   }
 
-  function toggleSaved(id) {
-    if (!canInteract(id)) return;
-    setSavedIds((ids) =>
-      ids.includes(id) ? ids.filter((savedId) => savedId !== id) : [...ids, id],
-    );
-  }
-
   function rateRecipe(id, value) {
-    if (!canInteract(id) || !Number.isInteger(value) || value < 1 || value > 5)
+    if (
+      !canInteract(id) ||
+      !Number.isInteger(value) ||
+      value < 1 ||
+      value > 5
+    ) {
       return;
-    setRatings((previous) => ({ ...previous, [id]: value }));
+    }
+
+    setRatings((previous) => ({
+      ...previous,
+      [id]: value,
+    }));
   }
 
   return (
@@ -32,9 +34,7 @@ export default function RecipeProvider({ children }) {
       value={{
         recipes,
         currentUserId,
-        savedIds,
         ratings,
-        toggleSaved,
         rateRecipe,
       }}
     >

@@ -31,11 +31,7 @@ public class CreateRecipeIngredientRequestDto
     [StringLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Range(
-    typeof(decimal),
-    "0.01",
-    "99999999.99",
-    ParseLimitsInInvariantCulture = true)]
+    [Range(typeof(decimal), "0.01", "99999999.99", ParseLimitsInInvariantCulture = true)]
     public decimal Amount { get; set; }
 
     [Required]
@@ -62,6 +58,8 @@ public class RecipeResponseDto
     public bool IsOwner { get; set; }
 
     public List<RecipeIngredientResponseDto> Ingredients { get; set; } = [];
+
+    public bool IsSaved { get; set; }
 }
 
 public class RecipeIngredientResponseDto

@@ -1,5 +1,7 @@
 import "./PlanMeals.css";
+
 import { useState } from "react";
+
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
 import { Button } from "../ui/button.jsx";
 import { Switch } from "../ui/switch.jsx";

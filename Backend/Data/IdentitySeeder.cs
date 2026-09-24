@@ -5,23 +5,18 @@ namespace FoodLab.Data;
 
 public static class IdentitySeeder
 {
-    public static async Task SeedAsync(
-        IServiceProvider services,
-        IConfiguration configuration)
+    public static async Task SeedAsync(IServiceProvider services, IConfiguration configuration)
     {
-        var userManager =
-            services.GetRequiredService<UserManager<ApplicationUser>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-        var roleManager =
-            services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
         // Create Roles
         foreach (var roleName in new[] { "User", "Admin" })
         {
             if (!await roleManager.RoleExistsAsync(roleName))
             {
-                var result = await roleManager.CreateAsync(
-                    new IdentityRole(roleName));
+                var result = await roleManager.CreateAsync(new IdentityRole(roleName));
 
                 CheckResult(result);
             }
@@ -48,8 +43,7 @@ public static class IdentitySeeder
             "Admin");
     }
 
-    private static async Task EnsureUserAsync(
-        UserManager<ApplicationUser> userManager,
+    private static async Task EnsureUserAsync(UserManager<ApplicationUser> userManager,
         string email,
         string? password,
         params string[] roles)
@@ -61,7 +55,7 @@ public static class IdentitySeeder
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new InvalidOperationException(
-                    $"Missing seed password for {email}. Check User Secrets.");
+                    $"Användaren: {email} saknar lösenord. Kontrollera User Secrets.");
             }
 
             user = new ApplicationUser

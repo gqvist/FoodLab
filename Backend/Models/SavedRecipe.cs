@@ -10,6 +10,5 @@ public class SavedRecipe
 
     public Recipe Recipe { get; set; } = null!;
 
-    public DateTimeOffset SavedAt { get; set; }
-        = DateTimeOffset.UtcNow;
+    public DateTimeOffset SavedAt { get; set; } = DateTimeOffset.UtcNow;
 }

@@ -20,61 +20,58 @@ public class RecipesController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    [ProducesResponseType(
-    typeof(List<RecipeResponseDto>),
-    StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<RecipeResponseDto>>> GetPublic(
-    CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(List<RecipeResponseDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<RecipeResponseDto>>> GetPublic(CancellationToken cancellationToken)
     {
-        var currentUserId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var recipes = await _recipeService.GetPublicAsync(
-            currentUserId,
-            cancellationToken);
+        var recipes = await _recipeService.GetPublicAsync(currentUserId, cancellationToken);
 
         return Ok(recipes);
     }
 
     [HttpGet("mine")]
-    [ProducesResponseType(
-        typeof(List<RecipeResponseDto>),
-        StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<RecipeResponseDto>>> GetMine(
-        CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(List<RecipeResponseDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<RecipeResponseDto>>> GetMine(CancellationToken cancellationToken)
     {
-        var ownerId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
+        var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (ownerId is null)
         {
             return Unauthorized();
         }
 
-        var recipes = await _recipeService.GetMineAsync(
-            ownerId,
-            cancellationToken);
+        var recipes = await _recipeService.GetMineAsync(ownerId, cancellationToken);
+
+        return Ok(recipes);
+    }
+
+    [HttpGet("saved")]
+    [ProducesResponseType(typeof(List<RecipeResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<RecipeResponseDto>>> GetSaved(CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var recipes = await _recipeService.GetSavedAsync(userId, cancellationToken);
 
         return Ok(recipes);
     }
 
     [AllowAnonymous]
     [HttpGet("{id:int}")]
-    [ProducesResponseType(
-    typeof(RecipeResponseDto),
-    StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RecipeResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RecipeResponseDto>> GetById(
-    int id,
-    CancellationToken cancellationToken)
+    public async Task<ActionResult<RecipeResponseDto>> GetById( int id, CancellationToken cancellationToken)
     {
-        var currentUserId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var recipe = await _recipeService.GetByIdAsync(
-            id,
-            currentUserId,
-            cancellationToken);
+        var recipe = await _recipeService.GetByIdAsync(id, currentUserId, cancellationToken);
 
         if (recipe is null)
         {
@@ -85,28 +82,67 @@ public class RecipesController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(
-        typeof(RecipeResponseDto),
-        StatusCodes.Status201Created)]
-    public async Task<ActionResult<RecipeResponseDto>> Create(
-        CreateRecipeRequestDto request,
-        CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(RecipeResponseDto), StatusCodes.Status201Created)]
+    public async Task<ActionResult<RecipeResponseDto>> Create(CreateRecipeRequestDto request, CancellationToken cancellationToken)
     {
-        var ownerId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
+        var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (ownerId is null)
         {
             return Unauthorized();
         }
 
-        var recipe = await _recipeService.CreateAsync(
-            request,
-            ownerId,
-            cancellationToken);
+        var recipe = await _recipeService.CreateAsync(request, ownerId, cancellationToken);
 
-        return Created(
-            $"/api/recipes/{recipe.Id}",
-            recipe);
+        return Created($"/api/recipes/{recipe.Id}", recipe);
+    }
+
+    [HttpPut("{id:int}/saved")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Save(int id, CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var result = await _recipeService.SaveAsync(id, userId, cancellationToken);
+
+        if (result == SaveRecipeResult.RecipeNotFound)
+        {
+            return NotFound();
+        }
+
+        if (result == SaveRecipeResult.OwnRecipe)
+        {
+            return BadRequest(new
+            {
+                message = "Det är olagligt att spara sitt eget recept."
+            });
+        }
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}/saved")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Unsave(int id, CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        await _recipeService.UnsaveAsync(id, userId, cancellationToken);
+
+        return NoContent();
     }
 }

@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
-import { BackArrowIcon } from "../../assets/icons/icons";
 import "./BackLink.css";
+
+import { Link } from "react-router-dom";
+
+import { BackArrowIcon } from "../../assets/icons/icons";
 
 export default function BackLink({ to = "/home", label = "Till startsidan" }) {
   return (
