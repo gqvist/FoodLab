@@ -75,7 +75,7 @@ function LoginPage() {
           )}
 
           <Button size="lg" type="submit" disabled={isLoading}>
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? "Loggar in..." : "Logga in"}
           </Button>
         </form>
         <p className="no-account-text">

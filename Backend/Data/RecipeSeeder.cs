@@ -131,6 +131,27 @@ public static class RecipeSeeder
             ])
     ];
 
+    private static readonly string[] PublicVariantNames =
+    [
+        "Tomatpasta med parmesan",
+        "Kycklingcurry med paprika",
+        "Tacokväll med ananas",
+        "Kokosgryta med röda linser",
+        "Pannkakor med sylt och grädde",
+        "Citronlax med rostad potatis",
+        "Nudelwok med krispiga grönsaker"
+    ];
+
+    private static readonly string[] PrivateRecipeNames =
+    [
+        "Familjens tomatpasta",
+        "Min privata kycklinggryta",
+        "Familjens fredagstacos",
+        "Min privata linsgryta",
+        "Familjens pannkakor",
+        "Min privata laxrätt"
+    ];
+
     public static async Task SeedAsync(IServiceProvider services)
     {
         var dbContext =
@@ -145,9 +166,8 @@ public static class RecipeSeeder
             "user2@foodlab.test"
         ];
 
-        for (var userIndex = 0; userIndex < userEmails.Length; userIndex++)
+        foreach (var email in userEmails)
         {
-            var email = userEmails[userIndex];
             var user = await userManager.FindByEmailAsync(email);
 
             if (user is null)
@@ -156,29 +176,43 @@ public static class RecipeSeeder
                     $"Kunde inte hitta testanvändaren {email}.");
             }
 
-            var existingRecipeNames = await dbContext.Recipes
-                .AsNoTracking()
-                .Where(recipe => recipe.OwnerId == user.Id)
+            var seededRecipes = CreateRecipes(user.Id).ToList();
+            var seededNames = seededRecipes
                 .Select(recipe => recipe.Name)
-                .ToListAsync();
-
-            var existingNames = new HashSet<string>(
-                existingRecipeNames,
-                StringComparer.OrdinalIgnoreCase);
-
-            var recipes = CreateRecipes(user.Id, userIndex)
-                .Where(recipe => !existingNames.Contains(recipe.Name))
                 .ToList();
 
-            dbContext.Recipes.AddRange(recipes);
+            var existingRecipes = await dbContext.Recipes
+                .Where(recipe => recipe.OwnerId == user.Id)
+                .Where(recipe => seededNames.Contains(recipe.Name))
+                .ToListAsync();
+
+            var existingRecipesByName = existingRecipes
+                .GroupBy(
+                    recipe => recipe.Name,
+                    StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.First(),
+                    StringComparer.OrdinalIgnoreCase);
+
+            foreach (var seededRecipe in seededRecipes)
+            {
+                if (existingRecipesByName.TryGetValue(
+                    seededRecipe.Name,
+                    out var existingRecipe))
+                {
+                    existingRecipe.IsPublic = seededRecipe.IsPublic;
+                    continue;
+                }
+
+                dbContext.Recipes.Add(seededRecipe);
+            }
         }
 
         await dbContext.SaveChangesAsync();
     }
 
-    private static IEnumerable<Recipe> CreateRecipes(
-        string ownerId,
-        int userIndex)
+    private static IEnumerable<Recipe> CreateRecipes(string ownerId)
     {
         for (var index = 0; index < Templates.Length; index++)
         {
@@ -187,20 +221,45 @@ public static class RecipeSeeder
             yield return CreateRecipe(
                 template,
                 ownerId,
-                isPublic: (index + userIndex) % 2 == 0,
+                template.Name,
+                isPublic: true,
                 createdDaysAgo: index);
+        }
+
+        for (var index = 0; index < PublicVariantNames.Length; index++)
+        {
+            yield return CreateRecipe(
+                Templates[index],
+                ownerId,
+                PublicVariantNames[index],
+                isPublic: true,
+                createdDaysAgo: Templates.Length + index);
+        }
+
+        for (var index = 0; index < PrivateRecipeNames.Length; index++)
+        {
+            yield return CreateRecipe(
+                Templates[index],
+                ownerId,
+                PrivateRecipeNames[index],
+                isPublic: false,
+                createdDaysAgo:
+                    Templates.Length +
+                    PublicVariantNames.Length +
+                    index);
         }
     }
 
     private static Recipe CreateRecipe(
         RecipeTemplate template,
         string ownerId,
+        string name,
         bool isPublic,
         int createdDaysAgo)
     {
         return new Recipe
         {
-            Name = template.Name,
+            Name = name,
             Description = template.Description,
             CookingTimeMinutes = template.CookingTimeMinutes,
             Instructions = template.Instructions,
