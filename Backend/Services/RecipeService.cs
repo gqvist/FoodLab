@@ -12,6 +12,13 @@ public enum SaveRecipeResult
     OwnRecipe
 }
 
+public enum RateRecipeResult
+{
+    Success,
+    RecipeNotFound,
+    OwnRecipe
+}
+
 public class RecipeService
 {
     private readonly ApplicationDbContext _dbContext;
@@ -21,7 +28,7 @@ public class RecipeService
         _dbContext = dbContext;
     }
 
-    public async Task<RecipeResponseDto> CreateAsync(CreateRecipeRequestDto request,string ownerId, CancellationToken cancellationToken = default)
+    public async Task<RecipeResponseDto> CreateAsync(CreateRecipeRequestDto request, string ownerId, CancellationToken cancellationToken = default)
     {
         var recipe = new Recipe
         {
@@ -43,11 +50,11 @@ public class RecipeService
 
             Ingredients = request.Ingredients
                 .Select(ingredient => new RecipeIngredient
-                    {
-                        Name = ingredient.Name.Trim(),
-                        Amount = ingredient.Amount,
-                        Unit = ingredient.Unit.Trim()
-                    })
+                {
+                    Name = ingredient.Name.Trim(),
+                    Amount = ingredient.Amount,
+                    Unit = ingredient.Unit.Trim()
+                })
                 .ToList()
         };
 
@@ -62,6 +69,7 @@ public class RecipeService
     {
         var recipe = await _dbContext.Recipes
             .Include(recipe => recipe.Ingredients)
+            .Include(recipe => recipe.Ratings)
             .SingleOrDefaultAsync(
                 recipe =>
                     recipe.Id == recipeId &&
@@ -116,6 +124,7 @@ public class RecipeService
             .AsNoTracking()
             .Where(recipe => recipe.OwnerId == ownerId)
             .Include(recipe => recipe.Ingredients)
+            .Include(recipe => recipe.Ratings)
             .OrderByDescending(recipe => recipe.CreatedAt)
             .ToListAsync(cancellationToken);
 
@@ -134,6 +143,7 @@ public class RecipeService
             .AsNoTracking()
             .Where(recipe => recipe.IsPublic)
             .Include(recipe => recipe.Ingredients)
+            .Include(recipe => recipe.Ratings)
             .OrderByDescending(recipe => recipe.CreatedAt)
             .ToListAsync(cancellationToken);
 
@@ -160,7 +170,8 @@ public class RecipeService
                 return MapToResponse(
                     recipe,
                     isOwner,
-                    isSaved: savedRecipeIds.Contains(recipe.Id));
+                    isSaved: savedRecipeIds.Contains(recipe.Id),
+                    currentUserId);
             })
             .ToList();
     }
@@ -170,8 +181,9 @@ public class RecipeService
         var recipe = await _dbContext.Recipes
             .AsNoTracking()
             .Include(recipe => recipe.Ingredients)
+            .Include(recipe => recipe.Ratings)
             .SingleOrDefaultAsync(recipe =>
-                recipe.Id == id &&(recipe.IsPublic || (currentUserId != null && recipe.OwnerId == currentUserId)),cancellationToken);
+                recipe.Id == id && (recipe.IsPublic || (currentUserId != null && recipe.OwnerId == currentUserId)), cancellationToken);
 
         if (recipe is null)
         {
@@ -193,7 +205,8 @@ public class RecipeService
         return MapToResponse(
             recipe,
             isOwner,
-            isSaved);
+            isSaved,
+            currentUserId);
     }
 
     public async Task<List<RecipeResponseDto>> GetSavedAsync(string userId, CancellationToken cancellationToken = default)
@@ -203,6 +216,8 @@ public class RecipeService
             .Where(savedRecipe => savedRecipe.UserId == userId && savedRecipe.Recipe.IsPublic)
             .Include(savedRecipe => savedRecipe.Recipe)
             .ThenInclude(recipe => recipe.Ingredients)
+            .Include(savedRecipe => savedRecipe.Recipe)
+            .ThenInclude(recipe => recipe.Ratings)
             .OrderByDescending(savedRecipe => savedRecipe.SavedAt)
             .ToListAsync(cancellationToken);
 
@@ -211,7 +226,8 @@ public class RecipeService
                 MapToResponse(
                     savedRecipe.Recipe,
                     isOwner: false,
-                    isSaved: true))
+                    isSaved: true,
+                    currentUserId: userId))
             .ToList();
     }
 
@@ -270,6 +286,45 @@ public class RecipeService
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<RateRecipeResult> RateAsync(int recipeId, string userId, int value, CancellationToken cancellationToken = default)
+    {
+        var recipe = await _dbContext.Recipes
+            .Include(recipe => recipe.Ratings)
+            .SingleOrDefaultAsync(recipe => recipe.Id == recipeId, cancellationToken);
+
+        if (recipe is null || !recipe.IsPublic)
+        {
+            return RateRecipeResult.RecipeNotFound;
+        }
+
+        if (recipe.OwnerId == userId)
+        {
+            return RateRecipeResult.OwnRecipe;
+        }
+
+        var existingRating = recipe.Ratings.SingleOrDefault(rating => rating.UserId == userId);
+
+        if (existingRating is null)
+        {
+            var rating = new RecipeRating
+            {
+                UserId = userId,
+                RecipeId = recipeId,
+                Value = value
+            };
+
+            _dbContext.RecipeRatings.Add(rating);
+        }
+        else
+        {
+            existingRating.Value = value;
+        }
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return RateRecipeResult.Success;
+    }
+
     public async Task<bool> DeleteAsync(int recipeId, string ownerId, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
@@ -292,10 +347,7 @@ public class RecipeService
         return true;
     }
 
-    private static RecipeResponseDto MapToResponse(
-        Recipe recipe,
-        bool isOwner,
-        bool isSaved)
+    private static RecipeResponseDto MapToResponse(Recipe recipe, bool isOwner, bool isSaved, string? currentUserId = null)
     {
         return new RecipeResponseDto
         {
@@ -308,6 +360,17 @@ public class RecipeService
             CreatedAt = recipe.CreatedAt,
             IsOwner = isOwner,
             IsSaved = isSaved,
+            AverageRating = recipe.Ratings.Count == 0
+                ? null
+                : Math.Round(recipe.Ratings.Average(rating => rating.Value), 1),
+
+            RatingCount = recipe.Ratings.Count,
+
+            CurrentUserRating = currentUserId is null
+                ? null
+                : recipe.Ratings
+                    .FirstOrDefault(rating => rating.UserId == currentUserId)
+                    ?.Value,
 
             Ingredients = recipe.Ingredients
                 .Select(ingredient =>

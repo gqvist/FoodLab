@@ -62,6 +62,12 @@ public class CreateRecipeIngredientRequestDto
     public string Unit { get; set; } = string.Empty;
 }
 
+public class RateRecipeRequestDto
+{
+    [Range(1, 5)]
+    public int Value { get; set; }
+}
+
 public class RecipeResponseDto
 {
     public int Id { get; set; }
@@ -83,6 +89,12 @@ public class RecipeResponseDto
     public List<RecipeIngredientResponseDto> Ingredients { get; set; } = [];
 
     public bool IsSaved { get; set; }
+
+    public double? AverageRating { get; set; }
+
+    public int RatingCount { get; set; }
+
+    public int? CurrentUserRating { get; set; }
 }
 
 public class RecipeIngredientResponseDto

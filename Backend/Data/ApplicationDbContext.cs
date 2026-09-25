@@ -16,6 +16,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<SavedRecipe> SavedRecipes => Set<SavedRecipe>();
 
+    public DbSet<RecipeRating> RecipeRatings => Set<RecipeRating>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -23,6 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         ConfigureRecipe(modelBuilder);
         ConfigureRecipeIngredient(modelBuilder);
         ConfigureSavedRecipe(modelBuilder);
+        ConfigureRecipeRating(modelBuilder);
     }
 
     private static void ConfigureRecipe(ModelBuilder modelBuilder)
@@ -129,6 +132,40 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .WithMany(recipe => recipe.SavedRecipes)
                 .HasForeignKey(savedRecipe => savedRecipe.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureRecipeRating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RecipeRating>(entity =>
+        {
+            entity.HasKey(rating => new
+            {
+                rating.UserId,
+                rating.RecipeId
+            });
+
+            entity.Property(rating => rating.Value)
+                .IsRequired();
+
+            entity.HasOne(rating => rating.User)
+                .WithMany(user => user.Ratings)
+                .HasForeignKey(rating => rating.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(rating => rating.Recipe)
+                .WithMany(recipe => recipe.Ratings)
+                .HasForeignKey(rating => rating.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(rating => rating.RecipeId);
+
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_RecipeRatings_Value",
+                    "[Value] BETWEEN 1 AND 5");
+            });
         });
     }
 }

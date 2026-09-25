@@ -1,0 +1,69 @@
+.recipe-rating {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.recipe-rating-average {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+}
+
+.recipe-rating-input {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.recipe-rating-controls {
+  display: flex;
+  align-items: center;
+}
+
+.recipe-rating-button {
+  padding: 0.2rem;
+  color: var(--foreground);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.recipe-rating-button:hover:not(:disabled) {
+  color: var(--primary);
+}
+
+.recipe-rating-button-filled {
+  color: var(--primary);
+}
+
+.recipe-rating-button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+.recipe-rating-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.recipe-rating-error {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: start;
+  margin: 0;
+  color: var(--destructive);
+  font-size: 0.875rem;
+}

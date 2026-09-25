@@ -121,6 +121,42 @@ public class RecipesController : ControllerBase
         return Ok(recipe);
     }
 
+    [HttpPut("{id:int}/rating")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Rate(int id, RateRecipeRequestDto request, CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var result = await _recipeService.RateAsync(
+            id,
+            userId,
+            request.Value,
+            cancellationToken);
+
+        if (result == RateRecipeResult.RecipeNotFound)
+        {
+            return NotFound();
+        }
+
+        if (result == RateRecipeResult.OwnRecipe)
+        {
+            return BadRequest(new
+            {
+                message = "Du kan inte betygsätta ditt eget recept."
+            });
+        }
+
+        return NoContent();
+    }
+
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

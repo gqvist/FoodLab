@@ -11,6 +11,7 @@ import TopNav from "../../components/top-nav/TopNav";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard";
 import BackLink from "../../components/back-link/BackLink";
 import RecipeSaveButton from "../../components/recipe-card/RecipeSaveButton";
+import RecipeRating from "../../components/recipe-rating/RecipeRating";
 
 export default function RecipePage() {
   const { id } = useParams();
@@ -51,6 +52,11 @@ export default function RecipePage() {
       shouldUpdate = false;
     };
   }, [id]);
+
+  async function refreshRecipe() {
+    const refreshedRecipe = await getRecipeById(id);
+    setRecipe(refreshedRecipe);
+  }
 
   async function handleDelete() {
     if (!recipe?.isOwner || isDeleting) {
@@ -136,6 +142,7 @@ export default function RecipePage() {
                   </div>
 
                   <p>{recipe.description || "Beskrivning saknas."}</p>
+                  <RecipeRating recipe={recipe} onRated={refreshRecipe} />
                 </DashboardCard>
 
                 <DashboardCard className="recipe-ingredients-card">
