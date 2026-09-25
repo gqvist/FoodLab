@@ -10,13 +10,13 @@ export async function getCsrfToken() {
       },
     });
   } catch {
-    throw new Error("Kunde inte förbereda begäran. Försök igen.");
+    throw new Error("Något gick fel. Försök igen.");
   }
 
   const { token } = response.data;
 
   if (!token) {
-    throw new Error("Servern returnerade ingen säkerhetstoken.");
+    throw new Error("Servern gav ingen säkerhetstoken.");
   }
 
   return token;
