@@ -1,42 +1,25 @@
-import { API_URL } from "../auth/config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError, getApiStatus } from "../api/apiError.js";
+import { getCsrfToken } from "../auth/getCsrfToken.js";
 
 export async function createRecipe(recipe) {
-  const csrfResponse = await fetch(`${API_URL}/api/auth/csrf`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+  const token = await getCsrfToken();
 
-  if (!csrfResponse.ok) {
-    throw new Error("Kunde inte förbereda receptet.");
+  try {
+    const response = await apiClient.post("/api/recipes", recipe, {
+      headers: {
+        "X-CSRF-TOKEN": token,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    if (getApiStatus(error) === 401) {
+      throw new Error("Du måste vara inloggad för att skapa ett recept.", {
+        cause: error,
+      });
+    }
+
+    throw createApiError(error, "Kunde inte skapa receptet.");
   }
-
-  const { token } = await csrfResponse.json();
-
-  const response = await fetch(`${API_URL}/api/recipes`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-TOKEN": token,
-    },
-    body: JSON.stringify(recipe),
-  });
-
-  if (response.status === 401) {
-    throw new Error("Du måste vara inloggad för att skapa ett recept.");
-  }
-
-  if (!response.ok) {
-    const problem = await response.json().catch(() => null);
-
-    const validationErrors = problem?.errors
-      ? Object.values(problem.errors).flat().join(" ")
-      : null;
-
-    throw new Error(
-      validationErrors || problem?.detail || "Kunde inte skapa receptet.",
-    );
-  }
-
-  return response.json();
 }

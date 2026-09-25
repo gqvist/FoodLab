@@ -1,21 +1,23 @@
-import { API_URL } from "../auth/config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError, getApiStatus } from "../api/apiError.js";
 
 export async function getRecipeById(id) {
-  const response = await fetch(
-    `${API_URL}/api/recipes/${encodeURIComponent(id)}`,
-    {
-      credentials: "include",
-      cache: "no-store",
-    },
-  );
+  try {
+    const response = await apiClient.get(
+      `/api/recipes/${encodeURIComponent(id)}`,
+      {
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      },
+    );
 
-  if (response.status === 404) {
-    return null;
+    return response.data;
+  } catch (error) {
+    if (getApiStatus(error) === 404) {
+      return null;
+    }
+
+    throw createApiError(error, "Kunde inte hämta receptet.");
   }
-
-  if (!response.ok) {
-    throw new Error("Kunde inte hämta receptet.");
-  }
-
-  return response.json();
 }

@@ -1,18 +1,20 @@
-import { API_URL } from "./config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError, getApiStatus } from "../api/apiError.js";
 
 export async function getCurrentUser() {
-  const response = await fetch(`${API_URL}/api/auth/me`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+  try {
+    const response = await apiClient.get("/api/auth/me", {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
 
-  if (response.status === 401) {
-    return null;
+    return response.data;
+  } catch (error) {
+    if (getApiStatus(error) === 401) {
+      return null;
+    }
+
+    throw createApiError(error, "Kunde inte hämta användaren.");
   }
-
-  if (!response.ok) {
-    throw new Error("Kunde inte hämta användaren.");
-  }
-
-  return response.json();
 }

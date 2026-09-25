@@ -1,24 +1,15 @@
 import "./RecipeCard.css";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ProfileIcon, SaveIcon } from "../../assets/icons/icons";
 import { saveRecipe } from "../../lib/recipes/saveRecipe";
 import { unsaveRecipe } from "../../lib/recipes/unsaveRecipe";
 
-export default function RecipeSaveButton({
-  recipe,
-  onSavedChange,
-}) {
-  const [isSaved, setIsSaved] = useState(
-    recipe.isSaved,
-  );
+export default function RecipeSaveButton({ recipe, onSavedChange }) {
+  const [isSaved, setIsSaved] = useState(Boolean(recipe.isSaved));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    setIsSaved(recipe.isSaved);
-  }, [recipe.id, recipe.isSaved]);
 
   async function handleClick() {
     if (isLoading) {
@@ -39,10 +30,7 @@ export default function RecipeSaveButton({
 
       setIsSaved(newSavedState);
 
-      onSavedChange?.(
-        recipe.id,
-        newSavedState,
-      );
+      onSavedChange?.(recipe.id, newSavedState);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -62,10 +50,7 @@ export default function RecipeSaveButton({
         aria-label="Ditt recept"
         title="Ditt recept"
       >
-        <ProfileIcon
-          size={20}
-          aria-hidden="true"
-        />
+        <ProfileIcon size={20} aria-hidden="true" />
       </span>
     );
   }
@@ -85,27 +70,14 @@ export default function RecipeSaveButton({
         className="recipe-save"
         aria-pressed={isSaved}
         aria-label={buttonLabel}
-        aria-describedby={
-          error
-            ? `save-error-${recipe.id}`
-            : undefined
-        }
-        title={
-          error ||
-          (isSaved
-            ? "Ta bort sparat recept"
-            : "Spara recept")
-        }
+        aria-describedby={error ? `save-error-${recipe.id}` : undefined}
+        title={error || (isSaved ? "Ta bort sparat recept" : "Spara recept")}
         disabled={isLoading}
         onClick={handleClick}
       >
         <SaveIcon
           size={20}
-          fill={
-            isSaved
-              ? "currentColor"
-              : "none"
-          }
+          fill={isSaved ? "currentColor" : "none"}
           aria-hidden="true"
         />
       </button>

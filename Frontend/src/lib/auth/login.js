@@ -1,35 +1,27 @@
-import { API_URL } from "./config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError, getApiStatus } from "../api/apiError.js";
+import { getCsrfToken } from "./getCsrfToken.js";
 
 export async function login(email, password) {
-  // Hämtar CSRF token före man skickar login request.
-  const csrfResponse = await fetch(`${API_URL}/api/auth/csrf`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+  const token = await getCsrfToken();
 
-  if (!csrfResponse.ok) {
-    throw new Error("Could not prepare login. Please try again.");
-  }
+  try {
+    const response = await apiClient.post(
+      "/api/auth/login",
+      { email, password },
+      {
+        headers: {
+          "X-CSRF-TOKEN": token,
+        },
+      },
+    );
 
-  const { token } = await csrfResponse.json();
-
-  const response = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-TOKEN": token,
-    },
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error("Fel e-post eller lösenord");
+    return response.data;
+  } catch (error) {
+    if (getApiStatus(error) === 401) {
+      throw new Error("Fel e-post eller lösenord.", { cause: error });
     }
 
-    throw new Error("Inloggningen misslyckades");
+    throw createApiError(error, "Inloggningen misslyckades.");
   }
-
-  return response.json();
 }

@@ -97,6 +97,53 @@ public class RecipesController : ControllerBase
         return Created($"/api/recipes/{recipe.Id}", recipe);
     }
 
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(typeof(RecipeResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<RecipeResponseDto>> Update(int id, UpdateRecipeRequestDto request, CancellationToken cancellationToken)
+    {
+        var ownerId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (ownerId is null)
+        {
+            return Unauthorized();
+        }
+
+        var recipe = await _recipeService.UpdateAsync(id, ownerId, request, cancellationToken);
+
+        if (recipe is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(recipe);
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteRecipe(int id, CancellationToken cancellationToken)
+    {
+        var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (ownerId is null)
+        {
+            return Unauthorized();
+        }
+
+        var wasDeleted = await _recipeService.DeleteAsync(id, ownerId, cancellationToken);
+
+        if (!wasDeleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
     [HttpPut("{id:int}/saved")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

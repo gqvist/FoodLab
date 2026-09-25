@@ -28,13 +28,10 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/recipe/new" element={<NewRecipePage />} />
+          <Route path="/recipe/:id/edit" element={<NewRecipePage editMode />} />
           <Route path="/plan" element={<PlanPage />} />
-
           <Route path="/my-recipes" element={<UserRecipesPage kind="my" />} />
-          <Route
-            path="/saved-recipes"
-            element={<UserRecipesPage kind="saved" />}
-          />
+          <Route path="/saved-recipes" element={<UserRecipesPage kind="saved" />} />
         </Route>
 
         {/* 404 */}

@@ -25,6 +25,29 @@ public class CreateRecipeRequestDto
     public List<CreateRecipeIngredientRequestDto> Ingredients { get; set; } = [];
 }
 
+public class UpdateRecipeRequestDto
+{
+    [Required]
+    [StringLength(150, MinimumLength = 2)]
+    public string Name { get; set; } = string.Empty;
+
+    [StringLength(1000)]
+    public string? Description { get; set; }
+
+    [Range(1, 1440)]
+    public int CookingTimeMinutes { get; set; }
+
+    public bool IsPrivate { get; set; }
+
+    [Required]
+    [StringLength(10000, MinimumLength = 1)]
+    public string Instructions { get; set; } = string.Empty;
+
+    [Required]
+    [MinLength(1)]
+    public List<CreateRecipeIngredientRequestDto> Ingredients { get; set; } = [];
+}
+
 public class CreateRecipeIngredientRequestDto
 {
     [Required]

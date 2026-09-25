@@ -1,19 +1,27 @@
 import "./NewRecipePage.css";
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "../../components/ui/button.jsx";
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList,} from "../../components/ui/combobox.jsx";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "../../components/ui/combobox.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
 import { Switch } from "../../components/ui/switch.jsx";
 import { Textarea } from "../../components/ui/textarea.jsx";
 import { RemoveIcon } from "../../assets/icons/icons.jsx";
 import { createRecipe } from "../../lib/recipes/createRecipe.js";
+import { getRecipeById } from "../../lib/recipes/getRecipeById.js";
 import TopNav from "../../components/top-nav/TopNav.jsx";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard.jsx";
-
+import { updateRecipe } from "../../lib/recipes/updateRecipe.js";
 
 const measurementUnits = [
   "st",
@@ -28,8 +36,11 @@ const measurementUnits = [
   "hg",
 ];
 
-function NewRecipePage() {
+function NewRecipePage({ editMode = false }) {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [existingRecipe, setExistingRecipe] = useState(null);
+  const [isLoading, setIsLoading] = useState(editMode);
   const [ingredients, setIngredients] = useState([{ id: 1, unit: null }]);
   const [isPrivate, setIsPrivate] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -42,6 +53,60 @@ function NewRecipePage() {
       return [...currentIngredients, { id: nextId, unit: null }];
     });
   }
+
+  useEffect(() => {
+    if (!editMode) {
+      return;
+    }
+
+    let active = true;
+
+    async function loadRecipe() {
+      try {
+        const result = await getRecipeById(id);
+
+        if (!result) {
+          throw new Error("Receptet hittades inte.");
+        }
+
+        if (!result.isOwner) {
+          throw new Error("Du får inte redigera det här receptet.");
+        }
+
+        if (active) {
+          setExistingRecipe(result);
+          setIsPrivate(!result.isPublic);
+
+          setIngredients(
+            result.ingredients.map((ingredient, index) => ({
+              id: index + 1,
+              name: ingredient.name,
+              amount: ingredient.amount,
+              unit: ingredient.unit,
+            })),
+          );
+        }
+      } catch (loadError) {
+        if (active) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Kunde inte hämta receptet.",
+          );
+        }
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadRecipe();
+
+    return () => {
+      active = false;
+    };
+  }, [editMode, id]);
 
   function updateIngredientUnit(id, unit) {
     setIngredients((currentIngredients) =>
@@ -85,8 +150,11 @@ function NewRecipePage() {
     setIsSaving(true);
 
     try {
-      const createdRecipe = await createRecipe(recipe);
-      navigate(`/recipe/${createdRecipe.id}`, { replace: true });
+      const savedRecipe = editMode
+        ? await updateRecipe(id, recipe)
+        : await createRecipe(recipe);
+
+      navigate(`/recipe/${savedRecipe.id}`, { replace: true });
     } catch (submitError) {
       setError(
         submitError instanceof TypeError
@@ -96,6 +164,39 @@ function NewRecipePage() {
     } finally {
       setIsSaving(false);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <TopNav />
+
+        <main className="new-recipe-page">
+          <div className="new-recipe-container">
+            <DashboardCard>
+              <p>Hämtar receptet...</p>
+            </DashboardCard>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  if (editMode && !existingRecipe) {
+    return (
+      <>
+        <TopNav />
+
+        <main className="new-recipe-page">
+          <div className="new-recipe-container">
+            <DashboardCard>
+              <h1>Kunde inte redigera receptet</h1>
+              <p role="alert">{error}</p>
+            </DashboardCard>
+          </div>
+        </main>
+      </>
+    );
   }
 
   return (
@@ -113,6 +214,7 @@ function NewRecipePage() {
                     id="recipe-name"
                     name="name"
                     type="text"
+                    defaultValue={existingRecipe?.name ?? ""}
                     minLength="2"
                     maxLength="150"
                     placeholder="Namnet på ditt recept..."
@@ -124,6 +226,7 @@ function NewRecipePage() {
                   <Textarea
                     id="recipe-description"
                     name="description"
+                    defaultValue={existingRecipe?.description ?? ""}
                     maxLength="1000"
                     placeholder="Beskriv receptet kort..."
                   />
@@ -135,6 +238,7 @@ function NewRecipePage() {
                       id="recipe-cooking-time"
                       name="cookingTimeMinutes"
                       type="number"
+                      defaultValue={existingRecipe?.cookingTimeMinutes ?? ""}
                       min="1"
                       max="1440"
                       step="1"
@@ -166,6 +270,7 @@ function NewRecipePage() {
                 className="new-recipe-instructions-input"
                 id="recipe-instructions"
                 name="instructions"
+                defaultValue={existingRecipe?.instructions ?? ""}
                 maxLength="10000"
                 placeholder="Beskriv hur man tillagar ditt recept"
                 required
@@ -184,6 +289,7 @@ function NewRecipePage() {
                     <Input
                       name={`ingredients[${index}].name`}
                       type="text"
+                      defaultValue={ingredient.name ?? ""}
                       maxLength="100"
                       placeholder="Ingrediens"
                       aria-label={`Ingrediens ${index + 1}`}
@@ -193,6 +299,7 @@ function NewRecipePage() {
                     <Input
                       name={`ingredients[${index}].amount`}
                       type="number"
+                      defaultValue={ingredient.amount ?? ""}
                       min="0.01"
                       step="any"
                       placeholder="Mängd"
@@ -259,7 +366,13 @@ function NewRecipePage() {
               </p>
             )}
             <Button type="submit" disabled={isSaving}>
-              {isSaving ? "Sparar..." : "Spara recept"}
+              {isSaving
+                ? editMode
+                  ? "Uppdaterar..."
+                  : "Sparar..."
+                : editMode
+                  ? "Spara ändringar"
+                  : "Spara recept"}
             </Button>
           </div>
         </form>

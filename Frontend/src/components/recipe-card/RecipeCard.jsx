@@ -25,7 +25,11 @@ export default function RecipeCard({ recipe, onSavedChange }) {
         </div>
       </Link>
       <div className="recipe-card-action">
-        <RecipeSaveButton recipe={recipe} onSavedChange={onSavedChange} />
+        <RecipeSaveButton
+          key={recipe.id}
+          recipe={recipe}
+          onSavedChange={onSavedChange}
+        />
       </div>
     </article>
   );

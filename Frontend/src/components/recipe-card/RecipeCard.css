@@ -60,7 +60,7 @@
   cursor: pointer; 
   border-radius: var(--radius); }
 
-  .recipe-save:disabled {
+.recipe-save:disabled {
   cursor: wait;
   opacity: 0.6;
 }
@@ -91,3 +91,5 @@
   font-size: 0.875rem;
   color: var(--muted-foreground);
 }
+
+

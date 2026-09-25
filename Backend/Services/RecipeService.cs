@@ -58,6 +58,58 @@ public class RecipeService
         return MapToResponse(recipe, isOwner: true, isSaved: false);
     }
 
+    public async Task<RecipeResponseDto?> UpdateAsync(int recipeId, string ownerId, UpdateRecipeRequestDto request, CancellationToken cancellationToken = default)
+    {
+        var recipe = await _dbContext.Recipes
+            .Include(recipe => recipe.Ingredients)
+            .SingleOrDefaultAsync(
+                recipe =>
+                    recipe.Id == recipeId &&
+                    recipe.OwnerId == ownerId,
+                cancellationToken);
+
+        if (recipe is null)
+        {
+            return null;
+        }
+
+        recipe.Name = request.Name.Trim();
+
+        recipe.Description = string.IsNullOrWhiteSpace(
+            request.Description)
+            ? null
+            : request.Description.Trim();
+
+        recipe.CookingTimeMinutes =
+            request.CookingTimeMinutes;
+
+        recipe.IsPublic = !request.IsPrivate;
+
+        recipe.Instructions =
+            request.Instructions.Trim();
+
+        _dbContext.RecipeIngredients.RemoveRange(
+            recipe.Ingredients);
+
+        recipe.Ingredients = request.Ingredients
+            .Select(ingredient =>
+                new RecipeIngredient
+                {
+                    Name = ingredient.Name.Trim(),
+                    Amount = ingredient.Amount,
+                    Unit = ingredient.Unit.Trim()
+                })
+            .ToList();
+
+        await _dbContext.SaveChangesAsync(
+            cancellationToken);
+
+        return MapToResponse(
+            recipe,
+            isOwner: true,
+            isSaved: false);
+    }
+
     public async Task<List<RecipeResponseDto>> GetMineAsync(string ownerId, CancellationToken cancellationToken = default)
     {
         var recipes = await _dbContext.Recipes
@@ -163,7 +215,7 @@ public class RecipeService
             .ToList();
     }
 
-    public async Task<SaveRecipeResult> SaveAsync( int recipeId, string userId, CancellationToken cancellationToken = default)
+    public async Task<SaveRecipeResult> SaveAsync(int recipeId, string userId, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
             .AsNoTracking()
@@ -216,6 +268,28 @@ public class RecipeService
         _dbContext.SavedRecipes.Remove(savedRecipe);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> DeleteAsync(int recipeId, string ownerId, CancellationToken cancellationToken = default)
+    {
+        var recipe = await _dbContext.Recipes
+            .SingleOrDefaultAsync(
+                recipe =>
+                    recipe.Id == recipeId &&
+                    recipe.OwnerId == ownerId,
+                cancellationToken);
+
+        if (recipe is null)
+        {
+            return false;
+        }
+
+        _dbContext.Recipes.Remove(recipe);
+
+        await _dbContext.SaveChangesAsync(
+            cancellationToken);
+
+        return true;
     }
 
     private static RecipeResponseDto MapToResponse(

@@ -1,27 +1,21 @@
-import { API_URL } from "./config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError, getApiStatus } from "../api/apiError.js";
+import { getCsrfToken } from "./getCsrfToken.js";
 
 export async function logout() {
-  const csrfResponse = await fetch(`${API_URL}/api/auth/csrf`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+  const token = await getCsrfToken();
 
-  if (!csrfResponse.ok) {
-    throw new Error("Kunde inte förbereda utloggningen.");
-  }
+  try {
+    await apiClient.post("/api/auth/logout", null, {
+      headers: {
+        "X-CSRF-TOKEN": token,
+      },
+    });
+  } catch (error) {
+    if (getApiStatus(error) === 401) {
+      return;
+    }
 
-  const { token } = await csrfResponse.json();
-
-  const response = await fetch(`${API_URL}/api/auth/logout`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "X-CSRF-TOKEN": token,
-    },
-  });
-
-  // Hanterar om din session redan avslutats
-  if (!response.ok && response.status !== 401) {
-    throw new Error("Kunde inte logga ut. Försök igen.");
+    throw createApiError(error, "Kunde inte logga ut. Försök igen.");
   }
 }

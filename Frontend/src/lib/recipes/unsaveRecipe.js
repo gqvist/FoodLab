@@ -1,39 +1,26 @@
-import { API_URL } from "../auth/config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError, getApiStatus } from "../api/apiError.js";
+import { getCsrfToken } from "../auth/getCsrfToken.js";
 
 export async function unsaveRecipe(recipeId) {
-  const csrfResponse = await fetch(`${API_URL}/api/auth/csrf`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+  const token = await getCsrfToken();
 
-  if (!csrfResponse.ok) {
-    throw new Error("Kunde inte förbereda borttagningen.");
-  }
-
-  const { token } = await csrfResponse.json();
-
-  const response = await fetch(
-    `${API_URL}/api/recipes/${encodeURIComponent(recipeId)}/saved`,
-    {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "X-CSRF-TOKEN": token,
+  try {
+    await apiClient.delete(
+      `/api/recipes/${encodeURIComponent(recipeId)}/saved`,
+      {
+        headers: {
+          "X-CSRF-TOKEN": token,
+        },
       },
-    },
-  );
-
-  if (response.status === 401) {
-    throw new Error("Du måste vara inloggad för att ändra sparade recept.");
-  }
-
-  if (!response.ok) {
-    const problem = await response.json().catch(() => null);
-
-    throw new Error(
-      problem?.message ||
-        problem?.detail ||
-        "Kunde inte ta bort det sparade receptet.",
     );
+  } catch (error) {
+    if (getApiStatus(error) === 401) {
+      throw new Error("Du måste vara inloggad för att ändra sparade recept.", {
+        cause: error,
+      });
+    }
+
+    throw createApiError(error, "Kunde inte ta bort det sparade receptet.");
   }
 }

@@ -1,14 +1,16 @@
-import { API_URL } from "../auth/config.js";
+import { apiClient } from "../api/apiClient.js";
+import { createApiError } from "../api/apiError.js";
 
 export async function getPublicRecipes() {
-  const response = await fetch(`${API_URL}/api/recipes`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+  try {
+    const response = await apiClient.get("/api/recipes", {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error("Kunde inte hämta recepten.");
+    return response.data;
+  } catch (error) {
+    throw createApiError(error, "Kunde inte hämta recepten.");
   }
-
-  return response.json();
 }
