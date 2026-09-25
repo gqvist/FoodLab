@@ -15,11 +15,17 @@ import {
 } from "../../components/ui/select";
 import { getPublicRecipes } from "../../lib/recipes/getPublicRecipes.js";
 
+const sortLabels = {
+  nyaste: "Nyaste",
+  tillagningstid: "Tillagningstid",
+  betyg: "Betyg",
+};
+
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState("nyaste");
 
   useEffect(() => {
     let active = true;
@@ -57,14 +63,14 @@ export default function RecipesPage() {
     const newestFirst =
       new Date(secondRecipe.createdAt) - new Date(firstRecipe.createdAt);
 
-    if (sortBy === "cooktime") {
+    if (sortBy === "tillagningstid") {
       return (
         firstRecipe.cookingTimeMinutes - secondRecipe.cookingTimeMinutes ||
         newestFirst
       );
     }
 
-    if (sortBy === "rating") {
+    if (sortBy === "betyg") {
       const firstRating = firstRecipe.averageRating ?? -1;
       const secondRating = secondRecipe.averageRating ?? -1;
 
@@ -95,15 +101,21 @@ export default function RecipesPage() {
                   className="recipes-sort-trigger"
                   aria-label="Sortera recept"
                 >
-                  <SelectValue />
+                  <SelectValue>
+                    {(value) => sortLabels[value] ?? value}
+                  </SelectValue>
                 </SelectTrigger>
 
-                <SelectContent>
-                  <SelectItem value="newest">Nyaste</SelectItem>
-                  <SelectItem value="cooktime">
-                    Kortast tillagningstid
+                <SelectContent
+                  side="bottom"
+                  align="end"
+                  alignItemWithTrigger={false}
+                >
+                  <SelectItem value="nyaste">Nyaste</SelectItem>
+                  <SelectItem value="tillagningstid">
+                    Tillagningstid
                   </SelectItem>
-                  <SelectItem value="rating">Högst betyg</SelectItem>
+                  <SelectItem value="betyg">Betyg</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -38,6 +38,7 @@
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: var(--dashboard-gap);
 }
 
