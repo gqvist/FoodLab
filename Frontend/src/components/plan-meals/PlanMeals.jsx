@@ -286,9 +286,7 @@ function PlanMeals({ onSaved }) {
                       aria-label={`${name}: ${recipe.name}`}
                     >
                       <span className="plan-meals-day-name">{name}</span>
-                      <span className="plan-meals-recipe">
-                        {recipe.name}
-                      </span>
+                      <span className="plan-meals-recipe">{recipe.name}</span>
                       <span className="plan-meals-recipe-info">
                         {recipe.cookingTimeMinutes} min
                       </span>

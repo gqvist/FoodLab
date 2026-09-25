@@ -48,24 +48,17 @@ function SavedRecipes({ showAll = false }) {
     };
   }, []);
 
-  function handleSavedChange(
-    recipeId,
-    isSaved,
-  ) {
+  function handleSavedChange(recipeId, isSaved) {
     if (isSaved) {
       return;
     }
 
     setRecipes((currentRecipes) =>
-      currentRecipes.filter(
-        (recipe) => recipe.id !== recipeId,
-      ),
+      currentRecipes.filter((recipe) => recipe.id !== recipeId),
     );
   }
 
-  const visibleRecipes = showAll
-    ? recipes
-    : recipes.slice(0, 3);
+  const visibleRecipes = showAll ? recipes : recipes.slice(0, 3);
 
   const Heading = showAll ? "h1" : "h2";
 
@@ -75,32 +68,21 @@ function SavedRecipes({ showAll = false }) {
         <div>
           <Heading>Sparade recept</Heading>
 
-          <p>
-            Recept från andra användare som du har
-            sparat.
-          </p>
+          <p>Recept från andra användare som du har sparat.</p>
         </div>
 
         {!showAll && (
           <Button
             nativeButton={false}
             variant="outline"
-            render={
-              <Link to="/saved-recipes">
-                Visa alla
-              </Link>
-            }
+            render={<Link to="/saved-recipes">Visa alla</Link>}
           />
         )}
       </div>
 
-      {isLoading && (
-        <p>Hämtar sparade recept...</p>
-      )}
+      {isLoading && <p>Hämtar sparade recept...</p>}
 
-      {error && (
-        <p role="alert">{error}</p>
-      )}
+      {error && <p role="alert">{error}</p>}
 
       {!isLoading && !error && (
         <>
@@ -109,18 +91,12 @@ function SavedRecipes({ showAll = false }) {
               <RecipeCard
                 key={recipe.id}
                 recipe={recipe}
-                onSavedChange={
-                  handleSavedChange
-                }
+                onSavedChange={handleSavedChange}
               />
             ))}
           </div>
 
-          {!recipes.length && (
-            <p>
-              Du har inga sparade recept...
-            </p>
-          )}
+          {!recipes.length && <p>Du har inga sparade recept...</p>}
         </>
       )}
     </DashboardCard>

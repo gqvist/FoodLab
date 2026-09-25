@@ -31,7 +31,8 @@ function App() {
           <Route path="/recipe/:id/edit" element={<NewRecipePage editMode />} />
           <Route path="/plan" element={<PlanPage />} />
           <Route path="/my-recipes" element={<UserRecipesPage kind="my" />} />
-          <Route path="/saved-recipes" element={<UserRecipesPage kind="saved" />} />
+          <Route path="/saved-recipes" element={<UserRecipesPage kind="saved" />}
+          />
         </Route>
 
         {/* 404 */}

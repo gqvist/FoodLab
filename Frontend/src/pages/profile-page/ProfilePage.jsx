@@ -10,7 +10,6 @@ import MyRecipes from "../../components/home-my-recipes/MyRecipes";
 import SavedRecipes from "../../components/home-saved-recipes/SavedRecipes";
 import ShoppingList from "../../components/home-shopping-list/ShoppingList";
 
-
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [error, setError] = useState("");

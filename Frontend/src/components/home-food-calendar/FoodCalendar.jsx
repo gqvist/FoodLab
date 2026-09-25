@@ -92,9 +92,7 @@ function FoodCalendar() {
       {!isLoading && !error && (
         <div className="food-calendar-grid">
           {days.map(({ dayOfWeek, name }) => {
-            const planDay = mealPlan.find(
-              (day) => day.dayOfWeek === dayOfWeek,
-            );
+            const planDay = mealPlan.find((day) => day.dayOfWeek === dayOfWeek);
 
             const recipe = planDay?.recipe;
 

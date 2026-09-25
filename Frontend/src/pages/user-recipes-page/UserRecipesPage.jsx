@@ -5,7 +5,6 @@ import MyRecipes from "../../components/home-my-recipes/MyRecipes";
 import SavedRecipes from "../../components/home-saved-recipes/SavedRecipes";
 import BackLink from "../../components/back-link/BackLink";
 
-
 export default function UserRecipesPage({ kind }) {
   return (
     <>
