@@ -12,7 +12,7 @@ Planen för uppgiften är baserad på **Recipe Experiment Lab** från förslagen
 **För att nå krav**<br />
 - Inloggning, utloggning, registrering
 - Dashboard (alla recept med betyg, filtrering (tid, betyg osv..) lägg till i dina recept)
-- Admin dashboard? Admin hem kan vara en överblick av hur många recept, hur många som lagts till denna månad (ez datetime), kanske se alla konton, möjlighet att ta bort användare?
+- Admin dashboard - Får ta i uppgift två pga tidsbrist, gör hellre matplan logiken.
 - Axios
 - shadcn(?)
 
@@ -66,7 +66,7 @@ Man ska kunna spara andras recept. Kan visas genom Alla receptId med UserId X t.
  **CheckListPages frontend**<br />
  - Login ✓
  - Home ✓
- - Plan page (om jag har tid)
+ - Plan page
  - Recipes page ✓
  - Single-recipe ✓
  - Admin dashboard

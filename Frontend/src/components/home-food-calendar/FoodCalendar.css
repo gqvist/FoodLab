@@ -19,15 +19,99 @@
   color: var(--muted-foreground);
 }
 
+.food-calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .food-calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.5rem;
 }
 
+.food-calendar-day {
+  min-height: 120px;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  overflow: hidden;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.food-calendar-day-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.food-calendar-day-link:hover {
+  background-color: var(--muted);
+}
+
+.food-calendar-day-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.food-calendar-day-name {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.food-calendar-recipe {
+  display: -webkit-box;
+  overflow: hidden;
+
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.food-calendar-time,
+.food-calendar-empty {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+.food-calendar-time {
+  margin-top: auto;
+}
+
+.food-calendar-message {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.food-calendar-error {
+  color: var(--destructive);
+}
+
+@media (max-width: 900px) {
+  .food-calendar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
   .food-calendar-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .food-calendar-grid {
+    grid-template-columns: 1fr;
   }
 }

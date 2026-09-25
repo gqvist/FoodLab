@@ -1,6 +1,7 @@
 ﻿using FoodLab.Data;
 using FoodLab.DTOs;
 using FoodLab.Models;
+using FoodLab.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodLab.Services;
@@ -53,7 +54,7 @@ public class RecipeService
                 {
                     Name = ingredient.Name.Trim(),
                     Amount = ingredient.Amount,
-                    Unit = ingredient.Unit.Trim()
+                    Unit = MeasurementUnits.Normalize(ingredient.Unit)
                 })
                 .ToList()
         };
@@ -83,21 +84,17 @@ public class RecipeService
 
         recipe.Name = request.Name.Trim();
 
-        recipe.Description = string.IsNullOrWhiteSpace(
-            request.Description)
+        recipe.Description = string.IsNullOrWhiteSpace(request.Description)
             ? null
             : request.Description.Trim();
 
-        recipe.CookingTimeMinutes =
-            request.CookingTimeMinutes;
+        recipe.CookingTimeMinutes = request.CookingTimeMinutes;
 
         recipe.IsPublic = !request.IsPrivate;
 
-        recipe.Instructions =
-            request.Instructions.Trim();
+        recipe.Instructions = request.Instructions.Trim();
 
-        _dbContext.RecipeIngredients.RemoveRange(
-            recipe.Ingredients);
+        _dbContext.RecipeIngredients.RemoveRange(recipe.Ingredients);
 
         recipe.Ingredients = request.Ingredients
             .Select(ingredient =>
@@ -105,12 +102,11 @@ public class RecipeService
                 {
                     Name = ingredient.Name.Trim(),
                     Amount = ingredient.Amount,
-                    Unit = ingredient.Unit.Trim()
+                    Unit = MeasurementUnits.Normalize(ingredient.Unit)
                 })
             .ToList();
 
-        await _dbContext.SaveChangesAsync(
-            cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return MapToResponse(
             recipe,

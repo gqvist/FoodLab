@@ -6,12 +6,20 @@ import TopNav from "../../components/top-nav/TopNav";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard";
 import RecipeCard from "../../components/recipe-card/RecipeCard";
 import BackLink from "../../components/back-link/BackLink";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 import { getPublicRecipes } from "../../lib/recipes/getPublicRecipes.js";
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
     let active = true;
@@ -45,6 +53,27 @@ export default function RecipesPage() {
     };
   }, []);
 
+  const sortedRecipes = [...recipes].sort((firstRecipe, secondRecipe) => {
+    const newestFirst =
+      new Date(secondRecipe.createdAt) - new Date(firstRecipe.createdAt);
+
+    if (sortBy === "cooktime") {
+      return (
+        firstRecipe.cookingTimeMinutes - secondRecipe.cookingTimeMinutes ||
+        newestFirst
+      );
+    }
+
+    if (sortBy === "rating") {
+      const firstRating = firstRecipe.averageRating ?? -1;
+      const secondRating = secondRecipe.averageRating ?? -1;
+
+      return secondRating - firstRating || newestFirst;
+    }
+
+    return newestFirst;
+  });
+
   return (
     <>
       <TopNav />
@@ -52,11 +81,32 @@ export default function RecipesPage() {
       <main className="recipes-page">
         <div className="recipes-container">
           <DashboardCard>
-            <h1>Recept</h1>
+            <div className="recipes-header">
+              <div>
+                <h1>Recept</h1>
 
-            <p className="recipes-intro">
-              Upptäck och spara offentliga recept.
-            </p>
+                <p className="recipes-intro">
+                  Upptäck och spara offentliga recept.
+                </p>
+              </div>
+
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger
+                  className="recipes-sort-trigger"
+                  aria-label="Sortera recept"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="newest">Nyaste</SelectItem>
+                  <SelectItem value="cooktime">
+                    Kortast tillagningstid
+                  </SelectItem>
+                  <SelectItem value="rating">Högst betyg</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             {isLoading && <p>Hämtar recept...</p>}
 
@@ -65,7 +115,7 @@ export default function RecipesPage() {
             {!isLoading && !error && (
               <>
                 <div className="recipes-grid">
-                  {recipes.map((recipe) => (
+                  {sortedRecipes.map((recipe) => (
                     <RecipeCard key={recipe.id} recipe={recipe} />
                   ))}
                 </div>

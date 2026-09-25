@@ -34,6 +34,7 @@ const measurementUnits = [
   "l",
   "g",
   "hg",
+  "kg",
 ];
 
 function NewRecipePage({ editMode = false }) {

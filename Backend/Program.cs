@@ -31,6 +31,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<MealPlanService>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -67,6 +68,7 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
 
     await IdentitySeeder.SeedAsync(scope.ServiceProvider, app.Configuration);
+    await RecipeSeeder.SeedAsync(scope.ServiceProvider);
 
     app.MapOpenApi();
     app.MapScalarApiReference("/scalar");

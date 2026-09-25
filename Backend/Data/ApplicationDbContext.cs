@@ -18,6 +18,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<RecipeRating> RecipeRatings => Set<RecipeRating>();
 
+    public DbSet<MealPlanEntry> MealPlanEntries => Set<MealPlanEntry>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -26,6 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         ConfigureRecipeIngredient(modelBuilder);
         ConfigureSavedRecipe(modelBuilder);
         ConfigureRecipeRating(modelBuilder);
+        ConfigureMealPlanEntry(modelBuilder);
     }
 
     private static void ConfigureRecipe(ModelBuilder modelBuilder)
@@ -165,6 +168,50 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 table.HasCheckConstraint(
                     "CK_RecipeRatings_Value",
                     "[Value] BETWEEN 1 AND 5");
+            });
+        });
+    }
+
+    private static void ConfigureMealPlanEntry(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MealPlanEntry>(entity =>
+        {
+            entity.HasKey(entry => new
+            {
+                entry.UserId,
+                entry.DayOfWeek
+            });
+
+            entity.Property(entry => entry.DayOfWeek)
+                .IsRequired();
+
+            entity.Property(entry => entry.RecipeId)
+                .IsRequired();
+
+            entity.HasOne(entry => entry.User)
+                .WithMany(user => user.MealPlanEntries)
+                .HasForeignKey(entry => entry.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(entry => entry.Recipe)
+                .WithMany(recipe => recipe.MealPlanEntries)
+                .HasForeignKey(entry => entry.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(entry => entry.RecipeId);
+
+            entity.HasIndex(entry => new
+            {
+                entry.UserId,
+                entry.RecipeId
+            })
+                .IsUnique();
+
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_MealPlanEntries_DayOfWeek",
+                    "[DayOfWeek] BETWEEN 1 AND 7");
             });
         });
     }

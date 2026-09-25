@@ -25,4 +25,6 @@ public class Recipe
     public List<SavedRecipe> SavedRecipes { get; set; } = [];
 
     public List<RecipeRating> Ratings { get; set; } = [];
+
+    public List<MealPlanEntry> MealPlanEntries { get; set; } = [];
 }

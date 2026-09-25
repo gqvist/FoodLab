@@ -1,6 +1,6 @@
 .page-not-found {
   min-height: 100vh;
-  padding: calc(80px + 2rem) 1rem 2rem;
+  padding: calc(var(--top-nav-height) + var(--page-top-gap)) 1rem 2rem;
   background-color: var(--muted);
 }
 

@@ -22,9 +22,44 @@
 .shopping-list-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1.5rem;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-/* Tablet och mobil */
+.shopping-list-item {
+  padding: 0.75rem 0;
+
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.shopping-list-item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.shopping-list-item-amount {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.shopping-list-message {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.shopping-list-error {
+  color: var(--destructive);
+}
+
 @media (max-width: 600px) {
   .shopping-list-header {
     flex-direction: column;

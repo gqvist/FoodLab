@@ -59,6 +59,9 @@ public class CreateRecipeIngredientRequestDto
 
     [Required]
     [StringLength(20)]
+    [RegularExpression(
+    @"(?i)^\s*(st|krm|tsk|msk|ml|cl|dl|l|g|hg|kg)\s*$",
+    ErrorMessage = "Enheten stöds inte.")]
     public string Unit { get; set; } = string.Empty;
 }
 
