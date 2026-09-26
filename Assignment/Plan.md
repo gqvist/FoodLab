@@ -83,3 +83,4 @@ Man ska kunna spara andras recept. Kan visas genom Alla receptId med UserId X t.
 - Decide on a name (foodlab) change mentions of GrubPlanner
 - Check for leftover fetch code (TypeError)
 - Make frontend yml do lint test
+- I really wanna comment my code more to make it clear and searchable for later
