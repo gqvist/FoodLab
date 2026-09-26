@@ -69,10 +69,11 @@ if (app.Environment.IsDevelopment())
 
     await IdentitySeeder.SeedAsync(scope.ServiceProvider, app.Configuration);
     await RecipeSeeder.SeedAsync(scope.ServiceProvider);
-
-    app.MapOpenApi();
-    app.MapScalarApiReference("/scalar");
 }
+
+// Allow access to OpenAPI and Scalar API reference without authentication (for assignment purpose)
+app.MapOpenApi().AllowAnonymous();
+app.MapScalarApiReference("/scalar").AllowAnonymous();
 
 app.UseHttpsRedirection();
 
