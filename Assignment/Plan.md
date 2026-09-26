@@ -1,3 +1,5 @@
+# Detta är en samling tankar jag haft under/innan arbetet som jag uppdaterar
+
 # FoodLab
 Planen för uppgiften är baserad på **Recipe Experiment Lab** från förslagen vi kan välja mellan.
 
@@ -66,8 +68,18 @@ Man ska kunna spara andras recept. Kan visas genom Alla receptId med UserId X t.
  **CheckListPages frontend**<br />
  - Login ✓
  - Home ✓
- - Plan page
+ - Plan page ✓
  - Recipes page ✓
  - Single-recipe ✓
  - Admin dashboard
  - Profile ✓
+
+**CLEANUP**<br />
+- Remove utils.js
+- Remove seperator.js
+- dayjs will be used to show current days recipe later...
+- Remove foodlab.http api call for test endpoint
+- Fix html lang till svenska
+- Decide on a name (foodlab) change mentions of GrubPlanner
+- Check for leftover fetch code (TypeError)
+- Make frontend yml do lint test
