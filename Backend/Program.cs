@@ -33,6 +33,14 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<MealPlanService>();
 
+var frontendOrigin = builder.Configuration["FrontendOrigin"];
+
+if (string.IsNullOrWhiteSpace(frontendOrigin))
+{
+    throw new InvalidOperationException(
+        "Missing FrontendOrigin configuration.");
+}
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "FoodLab.Auth";
@@ -54,7 +62,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
-        policy.WithOrigins("https://localhost:5173")
+        policy.WithOrigins(frontendOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

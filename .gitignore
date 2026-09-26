@@ -11,6 +11,8 @@
 # Environment files
 .env
 .env.*
+!.env.development
+!.env.production
 
 # OS
 .DS_Store
