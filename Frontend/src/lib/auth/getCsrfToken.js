@@ -1,5 +1,6 @@
 import { apiClient } from "../api/apiClient.js";
 
+//  Requests a fresh antiforgery token and rejects responses that do not contain one.
 export async function getCsrfToken() {
   let response;
 

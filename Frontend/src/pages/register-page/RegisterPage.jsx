@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Validates if passwords match and creates the account and redirects to /login
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");

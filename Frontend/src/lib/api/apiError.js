@@ -1,5 +1,7 @@
 import axios from "axios";
 
+// Converts Axios and ASP.NET Problem Details responses into consistent frontend errors.
+
 export function getApiStatus(error) {
   return axios.isAxiosError(error) ? error.response?.status : undefined;
 }

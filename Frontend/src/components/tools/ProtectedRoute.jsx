@@ -6,12 +6,16 @@ import { Spinner } from "../ui/spinner.jsx";
 import sadFaceError from "../../assets/logos/SadFaceError.svg";
 import TopNav from "../top-nav/TopNav.jsx";
 
+// Guards authenticated frontend routes by checking the current server session before rendering them.
+
+// Shows loading or error feedback, redirects anonymous users, and renders authenticated child routes.
 export default function ProtectedRoute() {
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     let active = true;
 
+    // Checks whether the authentication cookie represents a valid current user.
     async function checkSession() {
       try {
         const user = await getCurrentUser();

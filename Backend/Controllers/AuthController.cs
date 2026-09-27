@@ -23,6 +23,7 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpGet("csrf")]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    // Creates and returns the antiforgery token
     public ActionResult<CsrfTokenResponseDto> GetCsrfToken()
     {
         var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
@@ -35,6 +36,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
+    // Validates credentials and creates the users auth cookie
     public async Task<ActionResult<UserResponseDto>> Login(LoginRequestDto request)
     {
         var user = await _authService.LoginAsync(request);
@@ -52,6 +54,7 @@ public class AuthController : ControllerBase
 
     [HttpGet("me")]
     [ResponseCache( NoStore = true, Location = ResponseCacheLocation.None)]
+    // Returns the authenticated user or 401 when no valid session exists
     public async Task<ActionResult<UserResponseDto>> GetMe()
     {
         var user = await _authService.GetCurrentUserAsync(User);
@@ -65,6 +68,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("logout")]
+    // Signs out the current user and removes the session
     public async Task<IActionResult> Logout()
     {
         await _authService.LogoutAsync();
@@ -75,6 +79,7 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status201Created)]
+    // Creates a new user and converts Identity errors to API validation responses
     public async Task<ActionResult<UserResponseDto>> Register(RegisterRequestDto request)
     {
         var (result, user) = await _authService.RegisterAsync(request);

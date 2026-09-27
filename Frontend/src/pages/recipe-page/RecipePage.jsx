@@ -25,6 +25,7 @@ export default function RecipePage() {
 
   useEffect(() => {
     let shouldUpdate = true;
+    // Fetches selected recipe
     async function loadRecipe() {
       try {
         setIsLoading(true);
@@ -53,11 +54,13 @@ export default function RecipePage() {
     };
   }, [id]);
 
+  // Reloads the recipe after a rating change
   async function refreshRecipe() {
     const refreshedRecipe = await getRecipeById(id);
     setRecipe(refreshedRecipe);
   }
 
+  // Deletes recipe and redirects to users recipe list
   async function handleDelete() {
     if (!recipe?.isOwner || isDeleting) {
       return;
@@ -83,11 +86,13 @@ export default function RecipePage() {
     }
   }
 
+  // Confirmation dialog opens
   function openDeleteModal() {
     setDeleteError("");
     setIsDeleteModalOpen(true);
   }
 
+  // Confirmation dialog closes
   function closeDeleteModal() {
     if (!isDeleting) {
       setIsDeleteModalOpen(false);

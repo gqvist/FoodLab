@@ -1,5 +1,6 @@
 ﻿namespace FoodLab.Utilities;
 
+// Validates supported Swedish cooking units and converts compatible measurements to common base units.
 public static class MeasurementUnits
 {
     private static readonly Dictionary<
@@ -31,6 +32,7 @@ public static class MeasurementUnits
         return Conversions.ContainsKey(unit.Trim());
     }
 
+    // Returns only lowercase and supported units -> otherwise invalid
     public static string Normalize(string unit)
     {
         var normalizedUnit = unit.Trim().ToLowerInvariant();
@@ -45,15 +47,12 @@ public static class MeasurementUnits
         return normalizedUnit;
     }
 
-    public static (decimal Amount, string Unit) ConvertToBaseUnit(
-        decimal amount,
-        string unit)
+    // Converts volume to milliliters, weight to grams, and leaves item counts as items.
+    public static (decimal Amount, string Unit) ConvertToBaseUnit(decimal amount, string unit)
     {
         var normalizedUnit = Normalize(unit);
         var conversion = Conversions[normalizedUnit];
 
-        return (
-            amount * conversion.Multiplier,
-            conversion.BaseUnit);
+        return (amount * conversion.Multiplier, conversion.BaseUnit);
     }
 }

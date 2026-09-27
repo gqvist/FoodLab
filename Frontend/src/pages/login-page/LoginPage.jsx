@@ -15,6 +15,7 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Submits email/password and redirects to home if authenticated
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -25,7 +26,6 @@ function LoginPage() {
 
     try {
       await login(formData.get("email").trim(), formData.get("password"));
-
       navigate("/home", { replace: true });
     } catch (error) {
       setError(

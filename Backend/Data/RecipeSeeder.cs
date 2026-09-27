@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodLab.Data;
 
+// Creates recipes to populate the site for testing (AI-written)
 public static class RecipeSeeder
 {
     private static readonly RecipeTemplate[] Templates =

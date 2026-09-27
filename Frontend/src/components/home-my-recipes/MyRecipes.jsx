@@ -16,6 +16,7 @@ function MyRecipes({ showAll = false }) {
   useEffect(() => {
     let active = true;
 
+    // Fetches all recipes owned by the current user.
     async function loadRecipes() {
       try {
         const result = await getMyRecipes();

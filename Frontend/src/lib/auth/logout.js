@@ -2,6 +2,7 @@ import { apiClient } from "../api/apiClient.js";
 import { createApiError, getApiStatus } from "../api/apiError.js";
 import { getCsrfToken } from "./getCsrfToken.js";
 
+// Signs out the user and treats an already expired session as successfully logged out.
 export async function logout() {
   const token = await getCsrfToken();
 

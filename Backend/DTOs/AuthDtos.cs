@@ -2,6 +2,7 @@
 
 namespace FoodLab.DTOs;
 
+// Defines validated authentication requests and the safe user and CSRF responses exposed by the API.
 public class LoginRequestDto
 {
     [Required]

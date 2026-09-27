@@ -7,6 +7,7 @@ import { Button } from "../ui/button.jsx";
 import { ShareIcon } from "../../assets/icons/icons.jsx";
 import { getShoppingList } from "../../lib/meal-plan/getShoppingList.js";
 
+// Formats decimal ingredient amounts according to Swedish number conventions.
 const amountFormatter = new Intl.NumberFormat("sv-SE", {
   maximumFractionDigits: 2,
 });
@@ -19,6 +20,7 @@ function ShoppingList({ refreshKey = 0 }) {
   useEffect(() => {
     let active = true;
 
+    // Fetches ingredients from the meal-plan API.
     async function loadShoppingList() {
       try {
         setIsLoading(true);

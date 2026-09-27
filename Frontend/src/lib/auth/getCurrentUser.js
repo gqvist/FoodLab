@@ -1,6 +1,7 @@
 import { apiClient } from "../api/apiClient.js";
 import { createApiError, getApiStatus } from "../api/apiError.js";
 
+// Returns the current user, or null when the browser has no valid authenticated session.
 export async function getCurrentUser() {
   try {
     const response = await apiClient.get("/api/auth/me", {

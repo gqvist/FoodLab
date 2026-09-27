@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Applies auto antiforgery validation to unsafe controller actions
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
@@ -18,8 +19,10 @@ builder.Services.AddOpenApi();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? 
     throw new InvalidOperationException("Missing DefaultConnection connection string.");
 
+// Reads dev or prod db connection and registers EF core with SQL server
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
+// Configures Identity for cookie auth and stores user roles with EF core
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
@@ -41,6 +44,7 @@ if (string.IsNullOrWhiteSpace(frontendOrigin))
         "Missing FrontendOrigin configuration.");
 }
 
+// Configures auth cookie that expires after 2 hours of inactivity
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "FoodLab.Auth";
@@ -52,6 +56,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+// Using custom header for CSRF protection on requests that change server data (X-csrf-token - copied name from tutorial)
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
@@ -71,6 +76,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Dev only. Seeds users and recipes in dev enviroment
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();

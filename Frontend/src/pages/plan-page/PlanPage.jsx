@@ -9,6 +9,7 @@ import PlanMeals from "../../components/plan-meals/PlanMeals.jsx";
 function PlanPage() {
   const [shoppingListVersion, setShoppingListVersion] = useState(0);
 
+  // Changes the refresh key so the shopping list reloads after a plan is saved.
   function refreshShoppingList() {
     setShoppingListVersion((currentVersion) => currentVersion + 1);
   }

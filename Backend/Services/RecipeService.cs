@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodLab.Services;
 
+// Describes business outcomes that the controller converts into HTTP responses when saving a recipe.
 public enum SaveRecipeResult
 {
     Success,
@@ -13,6 +14,7 @@ public enum SaveRecipeResult
     OwnRecipe
 }
 
+// Describes business outcomes that the controller converts into HTTP responses when rating a recipe.
 public enum RateRecipeResult
 {
     Success,
@@ -28,7 +30,8 @@ public class RecipeService
     {
         _dbContext = dbContext;
     }
-
+    
+    // Normalizes recipe inputs, assigns ownership and saves recipe with ingredients.
     public async Task<RecipeResponseDto> CreateAsync(CreateRecipeRequestDto request, string ownerId, CancellationToken cancellationToken = default)
     {
         var recipe = new Recipe
@@ -66,6 +69,7 @@ public class RecipeService
         return MapToResponse(recipe, isOwner: true, isSaved: false);
     }
 
+    // Updates a recipe and replaces ingredient collection with the submitted values
     public async Task<RecipeResponseDto?> UpdateAsync(int recipeId, string ownerId, UpdateRecipeRequestDto request, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
@@ -114,6 +118,7 @@ public class RecipeService
             isSaved: false);
     }
 
+    // Loads all recipes owned by a user in "newest first" order
     public async Task<List<RecipeResponseDto>> GetMineAsync(string ownerId, CancellationToken cancellationToken = default)
     {
         var recipes = await _dbContext.Recipes
@@ -133,6 +138,7 @@ public class RecipeService
             .ToList();
     }
 
+    // Loads public recipes and adds saved, ownership and rating info for current user
     public async Task<List<RecipeResponseDto>> GetPublicAsync(string? currentUserId, CancellationToken cancellationToken = default)
     {
         var recipes = await _dbContext.Recipes
@@ -172,6 +178,7 @@ public class RecipeService
             .ToList();
     }
 
+    // Loads one recipe while preventing reading private recipes of other users
     public async Task<RecipeResponseDto?> GetByIdAsync(int id, string? currentUserId, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
@@ -205,6 +212,7 @@ public class RecipeService
             currentUserId);
     }
 
+    // Loads public recipes saved by current user (most recently saved order)
     public async Task<List<RecipeResponseDto>> GetSavedAsync(string userId, CancellationToken cancellationToken = default)
     {
         var savedRecipes = await _dbContext.SavedRecipes
@@ -227,6 +235,7 @@ public class RecipeService
             .ToList();
     }
 
+    // Saves a public recipe (only allowed if not owner)
     public async Task<SaveRecipeResult> SaveAsync(int recipeId, string userId, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
@@ -267,6 +276,7 @@ public class RecipeService
         return SaveRecipeResult.Success;
     }
 
+    // Removes saved recipe (only if it has been saved)
     public async Task UnsaveAsync(int recipeId, string userId, CancellationToken cancellationToken = default)
     {
         var savedRecipe = await _dbContext.SavedRecipes
@@ -282,6 +292,7 @@ public class RecipeService
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    // Creates or updates rating (prevents users from rating owned recipes)
     public async Task<RateRecipeResult> RateAsync(int recipeId, string userId, int value, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
@@ -321,6 +332,7 @@ public class RecipeService
         return RateRecipeResult.Success;
     }
 
+    // Deletes recipe (only when id and owner id matches)
     public async Task<bool> DeleteAsync(int recipeId, string ownerId, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
@@ -343,6 +355,7 @@ public class RecipeService
         return true;
     }
 
+    // Converts a recipe entity to the API response and ccalculates average raing values.
     private static RecipeResponseDto MapToResponse(Recipe recipe, bool isOwner, bool isSaved, string? currentUserId = null)
     {
         return new RecipeResponseDto

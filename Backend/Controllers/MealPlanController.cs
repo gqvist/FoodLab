@@ -21,6 +21,7 @@ public class MealPlanController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(MealPlanResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // Returns the users meal plan
     public async Task<ActionResult<MealPlanResponseDto>> Get(CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -39,6 +40,7 @@ public class MealPlanController : ControllerBase
     [ProducesResponseType(typeof(RandomizeMealPlanResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // Returns unique random recipes from recipe source (mine/saved/all)
     public async Task<ActionResult<RandomizeMealPlanResponseDto>> Randomize(RandomizeMealPlanRequestDto request, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(
@@ -81,6 +83,7 @@ public class MealPlanController : ControllerBase
     [HttpGet("shopping-list")]
     [ProducesResponseType(typeof(ShoppingListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // Builds a shopping list from ingredients in meal plan
     public async Task<ActionResult<ShoppingListResponseDto>> GetShoppingList(CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(
@@ -104,6 +107,7 @@ public class MealPlanController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    // Saves/replaces users meal plan
     public async Task<ActionResult<MealPlanResponseDto>> Save(SaveMealPlanRequestDto request, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -5,6 +5,7 @@ import DashboardCard from "@/components/dashboard-card/DashBoardCard";
 import BackLink from "@/components/back-link/BackLink";
 import foodLabLogo from "../../assets/logos/FoodLab.svg";
 
+// Renders the 404 page
 function PageNotFound() {
   return (
     <>

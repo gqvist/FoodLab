@@ -15,6 +15,7 @@ import {
 } from "../../components/ui/select";
 import { getPublicRecipes } from "../../lib/recipes/getPublicRecipes.js";
 
+// Labels for frontend sorting
 const sortLabels = {
   nyaste: "Nyaste",
   tillagningstid: "Tillagningstid",
@@ -30,6 +31,7 @@ export default function RecipesPage() {
   useEffect(() => {
     let active = true;
 
+    // Fetches public recipes
     async function loadRecipes() {
       try {
         const result = await getPublicRecipes();
@@ -59,6 +61,7 @@ export default function RecipesPage() {
     };
   }, []);
 
+  // Frontend only sorting of recipes
   const sortedRecipes = [...recipes].sort((firstRecipe, secondRecipe) => {
     const newestFirst =
       new Date(secondRecipe.createdAt) - new Date(firstRecipe.createdAt);

@@ -19,6 +19,7 @@ public class AuthService
         _dbContext = dbContext;
     }
 
+    // Finds user by email, check password and returns safe user DTO after login
     public async Task<UserResponseDto?> LoginAsync(LoginRequestDto request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email.Trim());
@@ -49,6 +50,7 @@ public class AuthService
         };
     }
 
+    // Resolves auth claims to its identity user and assigned roles
     public async Task<UserResponseDto?> GetCurrentUserAsync(ClaimsPrincipal principal)
     {
         var user = await _userManager.GetUserAsync(principal);
@@ -68,8 +70,8 @@ public class AuthService
         };
     }
 
-    public async Task<(IdentityResult Result, UserResponseDto? User)>
-        RegisterAsync(RegisterRequestDto request)
+    // Creates user and assigns user role in one transaction (fixes issue with partial registrations)
+    public async Task<(IdentityResult Result, UserResponseDto? User)> RegisterAsync(RegisterRequestDto request)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
@@ -107,6 +109,7 @@ public class AuthService
         return (IdentityResult.Success, response);
     }
 
+    // Ends current identity sign in session
     public async Task LogoutAsync()
     {
         await _signInManager.SignOutAsync();

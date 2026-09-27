@@ -11,6 +11,7 @@ import { getMealPlan } from "../../lib/meal-plan/getMealPlan.js";
 import { randomizeMealPlan } from "../../lib/meal-plan/randomizeMealPlan.js";
 import { saveMealPlan } from "../../lib/meal-plan/saveMealPlan.js";
 
+// Day number and corresponding day name
 const days = [
   { dayOfWeek: 1, name: "Måndag" },
   { dayOfWeek: 2, name: "Tisdag" },
@@ -21,6 +22,7 @@ const days = [
   { dayOfWeek: 7, name: "Söndag" },
 ];
 
+// Loads the saved plan and manages a separate draft until the user explicitly saves it.
 function PlanMeals({ onSaved }) {
   const [draftPlan, setDraftPlan] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +33,7 @@ function PlanMeals({ onSaved }) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
 
+  // Starting state of filter switches
   const [recipeFilters, setRecipeFilters] = useState({
     own: true,
     saved: false,
@@ -48,6 +51,7 @@ function PlanMeals({ onSaved }) {
   useEffect(() => {
     let active = true;
 
+    // Initializes the draft with the user's currently saved seven-day plan.
     async function loadMealPlan() {
       try {
         setIsLoading(true);
@@ -80,6 +84,7 @@ function PlanMeals({ onSaved }) {
     };
   }, []);
 
+  // Makes the all-public source mutually exclusive with the owned and saved source switches.
   function handleAllRecipesChange(checked) {
     setRecipeFilters((currentFilters) => ({
       ...currentFilters,
@@ -88,6 +93,7 @@ function PlanMeals({ onSaved }) {
     }));
   }
 
+  // Updates an owned or saved filter and disables the all-public filter when selected.
   function handleRecipeFilterChange(filter, checked) {
     setRecipeFilters((currentFilters) => ({
       ...currentFilters,
@@ -96,6 +102,7 @@ function PlanMeals({ onSaved }) {
     }));
   }
 
+  // Requests seven unique recipes and assigns them to the seven draft days without saving.
   async function handleRandomizeAll() {
     if (!hasSelectedSource || isBusy) {
       return;
@@ -130,6 +137,7 @@ function PlanMeals({ onSaved }) {
     }
   }
 
+  // Replaces one draft day while excluding recipes already used elsewhere in the plan.
   async function handleRandomizeDay(dayOfWeek) {
     if (!hasSelectedSource || isBusy) {
       return;
@@ -178,6 +186,7 @@ function PlanMeals({ onSaved }) {
     }
   }
 
+  // Persists the draft plan and tells the parent to refresh the generated shopping list.
   async function handleSave() {
     if (!hasPlannedRecipe || isBusy) {
       return;

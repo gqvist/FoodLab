@@ -19,7 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<RecipeRating> RecipeRatings => Set<RecipeRating>();
 
     public DbSet<MealPlanEntry> MealPlanEntries => Set<MealPlanEntry>();
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -113,6 +113,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         });
     }
 
+    // Uses user and recipe IDs as a composite key so the same recipe cannot be saved twice by one user.
     private static void ConfigureSavedRecipe(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<SavedRecipe>(entity =>
@@ -138,6 +139,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         });
     }
 
+    // Enforces one rating per user and recipe and restricts rating values to the range 1–5.
     private static void ConfigureRecipeRating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<RecipeRating>(entity =>
@@ -172,6 +174,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         });
     }
 
+    // Enforces one entry er weekday and prevents the same recipe from appearing twice
     private static void ConfigureMealPlanEntry(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MealPlanEntry>(entity =>

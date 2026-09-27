@@ -2,6 +2,7 @@ import { apiClient } from "../api/apiClient.js";
 import { createApiError, getApiStatus } from "../api/apiError.js";
 import { getCsrfToken } from "./getCsrfToken.js";
 
+// Starts a cookie session and returns safe information about the authenticated user.
 export async function login(email, password) {
   const token = await getCsrfToken();
 

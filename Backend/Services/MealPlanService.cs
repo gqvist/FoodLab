@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodLab.Services;
 
+// Represents expected randomization failures without using exceptions for normal business outcomes.
 public enum RandomizeMealPlanResult
 {
     Success,
@@ -13,6 +14,7 @@ public enum RandomizeMealPlanResult
     NotEnoughRecipes
 }
 
+// Represents validation and availability outcomes when replacing a saved meal plan.
 public enum SaveMealPlanResult
 {
     Success,
@@ -31,26 +33,19 @@ public class MealPlanService
         _dbContext = dbContext;
     }
 
-    public async Task<MealPlanResponseDto> GetAsync(
-        string userId,
-        CancellationToken cancellationToken = default)
+    // Loads a users saved entries and returns seven-day response
+    public async Task<MealPlanResponseDto> GetAsync(string userId, CancellationToken cancellationToken = default)
     {
         var entries = await _dbContext.MealPlanEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId)
             .Include(entry => entry.Recipe)
             .ThenInclude(recipe => recipe.Ratings)
-            .ToDictionaryAsync(
-                entry => entry.DayOfWeek,
-                cancellationToken);
+            .ToDictionaryAsync(entry => entry.DayOfWeek, cancellationToken);
 
-        var days = Enumerable
-            .Range(1, 7)
-            .Select(dayOfWeek =>
+        var days = Enumerable.Range(1, 7).Select(dayOfWeek =>
             {
-                entries.TryGetValue(
-                    dayOfWeek,
-                    out var entry);
+                entries.TryGetValue(dayOfWeek, out var entry);
 
                 return new MealPlanDayResponseDto
                 {
@@ -69,9 +64,9 @@ public class MealPlanService
         };
     }
 
+    // Randomizer: Builds a query from selected sources, excludes already used recipes and returns random result
     public async Task<(RandomizeMealPlanResult Result,
-    RandomizeMealPlanResponseDto? Response)> RandomizeAsync(
-        string userId,
+    RandomizeMealPlanResponseDto? Response)> RandomizeAsync(string userId,
         RandomizeMealPlanRequestDto request,
         CancellationToken cancellationToken = default)
     {
@@ -142,6 +137,7 @@ public class MealPlanService
             response);
     }
 
+    // Validates all seven days, recipe "uniqeness" and user-access before replacing existing plan.
     public async Task<(SaveMealPlanResult Result,
     MealPlanResponseDto? Response)> SaveAsync(
         string userId,
@@ -231,11 +227,11 @@ public class MealPlanService
 
         var savedPlan = await GetAsync(userId, cancellationToken);
 
-        return (
-            SaveMealPlanResult.Success,
-            savedPlan);
+        return (SaveMealPlanResult.Success, savedPlan);
     }
 
+    // Converts ingredient amounts to "base units" to fix not being able to add 1g and 1kg together.
+    // After base unit fix it sums up amounts
     public async Task<ShoppingListResponseDto> GetShoppingListAsync(string userId, CancellationToken cancellationToken = default)
     {
         var ingredients = await _dbContext.MealPlanEntries
@@ -293,6 +289,7 @@ public class MealPlanService
         };
     }
 
+    // Maps a recipe to the smaller response shape used by meal-plan cards.
     private static MealPlanRecipeResponseDto MapRecipe(Recipe recipe)
     {
         double? averageRating = recipe.Ratings.Count == 0

@@ -16,6 +16,7 @@ function SavedRecipes({ showAll = false }) {
   useEffect(() => {
     let active = true;
 
+    // Fetches the current user's saved public recipes.
     async function loadSavedRecipes() {
       try {
         setIsLoading(true);
@@ -48,6 +49,7 @@ function SavedRecipes({ showAll = false }) {
     };
   }, []);
 
+  // Removes a recipe from the rendered saved list after the child card unsaves it.
   function handleSavedChange(recipeId, isSaved) {
     if (isSaved) {
       return;

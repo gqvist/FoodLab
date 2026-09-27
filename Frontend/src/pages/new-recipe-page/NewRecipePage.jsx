@@ -23,6 +23,7 @@ import TopNav from "../../components/top-nav/TopNav.jsx";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard.jsx";
 import { updateRecipe } from "../../lib/recipes/updateRecipe.js";
 
+// Labels for working units
 const measurementUnits = [
   "st",
   "krm",
@@ -37,6 +38,7 @@ const measurementUnits = [
   "kg",
 ];
 
+// Manages recipe form state and switches between create and edit behavior through editMode
 function NewRecipePage({ editMode = false }) {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -47,6 +49,7 @@ function NewRecipePage({ editMode = false }) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
+  // Adds an empty ingredient row with a stable local ID used as its React key.
   function addIngredient() {
     setIngredients((currentIngredients) => {
       const nextId = Math.max(0, ...currentIngredients.map(({ id }) => id)) + 1;
@@ -62,6 +65,7 @@ function NewRecipePage({ editMode = false }) {
 
     let active = true;
 
+    // Loads existing values in edit mode
     async function loadRecipe() {
       try {
         const result = await getRecipeById(id);
@@ -109,6 +113,7 @@ function NewRecipePage({ editMode = false }) {
     };
   }, [editMode, id]);
 
+  // Updates the selected measurement unit for one ingredient row.
   function updateIngredientUnit(id, unit) {
     setIngredients((currentIngredients) =>
       currentIngredients.map((ingredient) =>
@@ -117,6 +122,7 @@ function NewRecipePage({ editMode = false }) {
     );
   }
 
+  // Removes ingredient row
   function removeIngredient(id) {
     setIngredients((currentIngredients) =>
       currentIngredients.length === 1
@@ -125,6 +131,7 @@ function NewRecipePage({ editMode = false }) {
     );
   }
 
+  // Builds the API payload from form and component state, then creates or updates the recipe.
   async function handleSubmit(event) {
     event.preventDefault();
 

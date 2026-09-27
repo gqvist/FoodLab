@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FoodLab.Data;
 
+// Creates development roles and test accounts from passwords stored in user-secrets.
 public static class IdentitySeeder
 {
     public static async Task SeedAsync(IServiceProvider services, IConfiguration configuration)

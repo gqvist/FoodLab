@@ -15,6 +15,7 @@ export default function ProfilePage() {
   const [error, setError] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  // Ends the server session and returns user to /login
   async function handleLogout() {
     setError("");
     setIsLoggingOut(true);

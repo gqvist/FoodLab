@@ -7,6 +7,7 @@ import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
 import { Button } from "../ui/button.jsx";
 import { getMealPlan } from "../../lib/meal-plan/getMealPlan.js";
 
+// Day number and corresponding day name
 const days = [
   { dayOfWeek: 1, name: "Måndag" },
   { dayOfWeek: 2, name: "Tisdag" },
@@ -25,6 +26,7 @@ function FoodCalendar() {
   useEffect(() => {
     let active = true;
 
+    // Fetches the saved plan while protecting against updates after unmounting.
     async function loadMealPlan() {
       try {
         setIsLoading(true);
