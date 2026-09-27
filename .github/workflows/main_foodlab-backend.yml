@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'Backend/**'
+      - '.github/workflows/main_foodlab-backend.yml'
   workflow_dispatch:
 
 jobs:

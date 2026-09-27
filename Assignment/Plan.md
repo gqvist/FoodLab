@@ -75,12 +75,12 @@ Man ska kunna spara andras recept. Kan visas genom Alla receptId med UserId X t.
  - Profile ✓
 
 **CLEANUP**<br />
-- Remove utils.js
-- Remove seperator.js
-- dayjs will be used to show current days recipe later...
-- Remove foodlab.http api call for test endpoint
-- Fix html lang till svenska
-- Decide on a name (foodlab) change mentions of GrubPlanner
-- Check for leftover fetch code (TypeError)
-- Make frontend yml do lint test
+- Remove utils.js (not removed, used for chadcn component gen. Missed that)
+- Remove seperator.js ✓
+- dayjs will be used to show current days recipe later (kept in project, will be used later)
+- Remove foodlab.http api call for test endpoint ✓ (now uses recipes as test endpoint)
+- Fix html lang till svenska ✓
+- Use FoodLab consistently as the application name ✓
+- Check for leftover fetch code (TypeError) ✓
+- Make frontend yml do lint test ✓
 - I really wanna comment my code more to make it clear and searchable for later

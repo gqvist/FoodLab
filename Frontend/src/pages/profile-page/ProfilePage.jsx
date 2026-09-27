@@ -24,9 +24,9 @@ export default function ProfilePage() {
       navigate("/login", { replace: true });
     } catch (error) {
       setError(
-        error instanceof TypeError
-          ? "Kunde inte ansluta till servern. Försök igen."
-          : error.message,
+        error instanceof Error
+          ? error.message
+          : "Kunde inte logga ut. Försök igen.",
       );
     } finally {
       setIsLoggingOut(false);

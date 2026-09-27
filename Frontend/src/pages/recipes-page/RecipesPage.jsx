@@ -40,9 +40,9 @@ export default function RecipesPage() {
       } catch (loadError) {
         if (active) {
           setError(
-            loadError instanceof TypeError
-              ? "Kunde inte ansluta till servern. Försök igen."
-              : loadError.message,
+            loadError instanceof Error
+              ? loadError.message
+              : "Kunde inte hämta recepten.",
           );
         }
       } finally {

@@ -1,6 +1,6 @@
 @FoodLab_HostAddress = https://localhost:7079
 
-GET {{FoodLab_HostAddress}}/api/test
+GET {{FoodLab_HostAddress}}/api/recipes
 Accept: application/json
 
 ###

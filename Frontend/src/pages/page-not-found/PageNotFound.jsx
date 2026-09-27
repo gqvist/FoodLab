@@ -3,7 +3,7 @@ import "./PageNotFound.css";
 import TopNav from "../../components/top-nav/TopNav";
 import DashboardCard from "@/components/dashboard-card/DashBoardCard";
 import BackLink from "@/components/back-link/BackLink";
-import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
+import foodLabLogo from "../../assets/logos/FoodLab.svg";
 
 function PageNotFound() {
   return (
@@ -17,7 +17,7 @@ function PageNotFound() {
               <span className="left-4" aria-hidden="true">
                 4
               </span>
-              <img src={grubPlannerLogo} alt="" aria-hidden="true" />
+              <img src={foodLabLogo} alt="" aria-hidden="true" />
               <span className="right-4" aria-hidden="true">
                 4
               </span>

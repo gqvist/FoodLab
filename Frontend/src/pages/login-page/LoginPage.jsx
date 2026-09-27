@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
+import foodLabLogo from "../../assets/logos/FoodLab.svg";
 import { login } from "../../lib/auth/login.js";
 import { Button } from "../../components/ui/button.jsx";
 import { Input } from "../../components/ui/input.jsx";
@@ -29,9 +29,7 @@ function LoginPage() {
       navigate("/home", { replace: true });
     } catch (error) {
       setError(
-        error instanceof TypeError
-          ? "Kunde inte ansluta till servern. Försök igen."
-          : error.message,
+        error instanceof Error ? error.message : "Inloggningen misslyckades.",
       );
     } finally {
       setIsLoading(false);
@@ -41,7 +39,7 @@ function LoginPage() {
   return (
     <main className="login-page">
       <div className="login-container">
-        <img src={grubPlannerLogo} alt="GrubPlanner" className="login-logo" />
+        <img src={foodLabLogo} alt="FoodLab" className="login-logo" />
 
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-field">

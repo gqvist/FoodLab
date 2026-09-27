@@ -4,13 +4,13 @@ import { NavLink } from "react-router-dom";
 
 import { buttonVariants } from "../ui/button.jsx";
 import { ProfileIcon } from "../../assets/icons/icons.jsx";
-import grubPlannerLogo from "../../assets/logos/GrubPlanner.svg";
+import foodLabLogo from "../../assets/logos/FoodLab.svg";
 
 function TopNav() {
   return (
     <nav className="top-nav">
       <NavLink to="/home" className="top-nav-brand">
-        <img src={grubPlannerLogo} alt="GrubPlanner" className="top-nav-logo" />
+        <img src={foodLabLogo} alt="FoodLab" className="top-nav-logo" />
       </NavLink>
 
       <div className="top-nav-links">

@@ -158,9 +158,11 @@ function NewRecipePage({ editMode = false }) {
       navigate(`/recipe/${savedRecipe.id}`, { replace: true });
     } catch (submitError) {
       setError(
-        submitError instanceof TypeError
-          ? "Kunde inte ansluta till servern. Försök igen."
-          : submitError.message,
+        submitError instanceof Error
+          ? submitError.message
+          : editMode
+            ? "Kunde inte uppdatera receptet."
+            : "Kunde inte skapa receptet.",
       );
     } finally {
       setIsSaving(false);

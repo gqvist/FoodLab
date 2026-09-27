@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'Frontend/**'
+      - '.github/workflows/main_foodlab-frontend.yml'
   workflow_dispatch:
 
 jobs:
@@ -25,12 +26,17 @@ jobs:
         with:
           node-version: '24.x'
 
-      - name: npm install, build, and test
+      - name: Install dependencies
         working-directory: ./Frontend
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+        run: npm ci
+
+      - name: Lint
+        working-directory: ./Frontend
+        run: npm run lint
+
+      - name: Build
+        working-directory: ./Frontend
+        run: npm run build
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
