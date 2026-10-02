@@ -32,6 +32,15 @@
   align-items: center;
 }
 
+.recipe-rating-button {
+  width: 1.5rem;
+}
+
+.recipe-rating-controls .recipe-rating-button > svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
 .recipe-rating-button-filled {
   color: var(--primary);
 }

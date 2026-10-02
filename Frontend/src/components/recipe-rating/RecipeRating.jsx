@@ -75,7 +75,9 @@ export default function RecipeRating({ recipe, onRated }) {
                 <Button
                   key={value}
                   type="button"
-                  className={isFilled ? "recipe-rating-button-filled" : ""}
+                  className={`recipe-rating-button${
+                    isFilled ? " recipe-rating-button-filled" : ""
+                  }`}
                   variant="ghost"
                   size="icon-xs"
                   aria-label={`${value} av 5 stjärnor`}
