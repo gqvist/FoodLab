@@ -2,8 +2,15 @@ import "./TopNav.css";
 
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import {
+  BookmarkIcon,
+  BookOpenIcon,
+  LogOutIcon,
+  ShoppingCartIcon,
+} from "lucide-react";
 
 import { Button, buttonVariants } from "../ui/button.jsx";
+import { Separator } from "../ui/separator.jsx";
 import { Spinner } from "../ui/spinner.jsx";
 import { ProfileIcon } from "../../assets/icons/icons.jsx";
 import foodLabLogo from "../../assets/logos/FoodLab.svg";
@@ -101,7 +108,11 @@ function TopNav() {
           Recept
         </NavLink>
 
-        <span className="top-nav-divider" aria-hidden="true" />
+        <Separator
+          className="top-nav-divider"
+          orientation="vertical"
+          aria-hidden="true"
+        />
 
         <div className="top-nav-profile" ref={menuRef}>
           <Button
@@ -133,6 +144,7 @@ function TopNav() {
                 })}
                 onClick={() => setIsMenuOpen(false)}
               >
+                <ShoppingCartIcon aria-hidden="true" />
                 Inköpslista
               </NavLink>
               <NavLink
@@ -143,6 +155,7 @@ function TopNav() {
                 })}
                 onClick={() => setIsMenuOpen(false)}
               >
+                <BookOpenIcon aria-hidden="true" />
                 Mina recept
               </NavLink>
               <NavLink
@@ -153,10 +166,11 @@ function TopNav() {
                 })}
                 onClick={() => setIsMenuOpen(false)}
               >
+                <BookmarkIcon aria-hidden="true" />
                 Sparade recept
               </NavLink>
 
-              <span className="top-nav-menu-divider" aria-hidden="true" />
+              <Separator className="top-nav-menu-divider" aria-hidden="true" />
 
               {logoutError && (
                 <p className="top-nav-logout-error" role="alert">
@@ -171,7 +185,11 @@ function TopNav() {
                 disabled={isLoggingOut}
                 onClick={handleLogout}
               >
-                {isLoggingOut && <Spinner />}
+                {isLoggingOut ? (
+                  <Spinner />
+                ) : (
+                  <LogOutIcon aria-hidden="true" />
+                )}
                 {isLoggingOut ? "Loggar ut..." : "Logga ut"}
               </Button>
             </div>

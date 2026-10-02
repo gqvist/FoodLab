@@ -2,10 +2,13 @@ import "./MyRecipes.css";
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { PlusIcon } from "lucide-react";
 
 import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Alert, AlertDescription } from "../ui/alert.jsx";
 import { Button } from "../ui/button.jsx";
+import { Skeleton } from "../ui/skeleton.jsx";
 import { getMyRecipes } from "../../lib/recipes/getMyRecipes.js";
 
 function MyRecipes({ showAll = false }) {
@@ -61,7 +64,12 @@ function MyRecipes({ showAll = false }) {
         <div className="my-recipes-actions">
           <Button
             nativeButton={false}
-            render={<Link to="/recipe/new">+ Nytt recept</Link>}
+            render={
+              <Link to="/recipe/new">
+                <PlusIcon aria-hidden="true" />
+                Nytt recept
+              </Link>
+            }
           />
 
           {!showAll && (
@@ -74,9 +82,19 @@ function MyRecipes({ showAll = false }) {
         </div>
       </div>
 
-      {isLoading && <p>Hämtar dina recept...</p>}
+      {isLoading && (
+        <div className="my-recipes-grid" aria-label="Hämtar dina recept">
+          {Array.from({ length: showAll ? 6 : 3 }, (_, index) => (
+            <Skeleton className="h-32" key={index} />
+          ))}
+        </div>
+      )}
 
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {!isLoading && !error && (
         <>

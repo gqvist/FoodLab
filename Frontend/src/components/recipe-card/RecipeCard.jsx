@@ -2,18 +2,25 @@ import "./RecipeCard.css";
 
 import { Link } from "react-router-dom";
 
-import { RatingIcon } from "../../assets/icons/icons";
+import { ClockIcon, StarIcon } from "lucide-react";
+
+import { Badge } from "../ui/badge.jsx";
+import { Card, CardContent, CardTitle } from "../ui/card.jsx";
 import RecipeSaveButton from "./RecipeSaveButton";
 
 export default function RecipeCard({ recipe, onSavedChange }) {
   return (
-    <article className="recipe-card">
+    <Card className="recipe-card">
       <Link to={`/recipe/${recipe.id}`} className="recipe-card-link">
-        <h3>{recipe.name}</h3>
+        <CardTitle className="recipe-card-title">{recipe.name}</CardTitle>
 
-        <div className="recipe-card-info">
-          <span>{recipe.cookingTimeMinutes} min</span>
-          <span
+        <CardContent className="recipe-card-info">
+          <Badge variant="secondary">
+            <ClockIcon aria-hidden="true" />
+            {recipe.cookingTimeMinutes} min
+          </Badge>
+          <Badge
+            variant="secondary"
             className="recipe-card-rating"
             aria-label={
               recipe.averageRating == null
@@ -21,12 +28,12 @@ export default function RecipeCard({ recipe, onSavedChange }) {
                 : `Genomsnittligt betyg: ${Number(recipe.averageRating).toFixed(1)} av 5`
             }
           >
-            <RatingIcon size={14} fill="currentColor" aria-hidden="true" />
+            <StarIcon fill="currentColor" aria-hidden="true" />
             {recipe.averageRating == null
               ? "–"
               : Number(recipe.averageRating).toFixed(1)}
-          </span>
-        </div>
+          </Badge>
+        </CardContent>
       </Link>
       <div className="recipe-card-action">
         <RecipeSaveButton
@@ -35,6 +42,6 @@ export default function RecipeCard({ recipe, onSavedChange }) {
           onSavedChange={onSavedChange}
         />
       </div>
-    </article>
+    </Card>
   );
 }

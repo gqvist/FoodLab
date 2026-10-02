@@ -4,8 +4,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "../../components/ui/button.jsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card.jsx";
+import { Alert, AlertDescription } from "../../components/ui/alert.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
+import { Spinner } from "../../components/ui/spinner.jsx";
 import { register } from "../../lib/auth/register.js";
 import foodLabLogo from "../../assets/logos/FoodLab.svg";
 
@@ -45,13 +54,16 @@ export default function RegisterPage() {
 
   return (
     <main className="register-page">
-      <div className="register-container">
-        <img
-          src={foodLabLogo}
-          alt="FoodLab"
-          className="register-logo"
-        />
+      <Card className="register-container">
+        <CardHeader className="register-header">
+          <img src={foodLabLogo} alt="FoodLab" className="register-logo" />
+          <CardTitle className="text-xl">Skapa konto</CardTitle>
+          <CardDescription>
+            Börja samla recept och planera veckan.
+          </CardDescription>
+        </CardHeader>
 
+        <CardContent>
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="register-field">
             <Label htmlFor="email">E-post</Label>
@@ -92,16 +104,18 @@ export default function RegisterPage() {
           </div>
 
           {error && (
-            <p className="register-error" role="alert">
-              {error}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           <Button size="lg" type="submit" disabled={isLoading}>
+            {isLoading && <Spinner />}
             {isLoading ? "Skapar konto..." : "Skapa konto"}
           </Button>
         </form>
-      </div>
+        </CardContent>
+      </Card>
     </main>
   );
 }

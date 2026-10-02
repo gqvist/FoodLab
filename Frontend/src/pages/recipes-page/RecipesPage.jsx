@@ -7,6 +7,11 @@ import DashboardCard from "../../components/dashboard-card/DashBoardCard";
 import RecipeCard from "../../components/recipe-card/RecipeCard";
 import BackLink from "../../components/back-link/BackLink";
 import {
+  Alert,
+  AlertDescription,
+} from "../../components/ui/alert.jsx";
+import { Skeleton } from "../../components/ui/skeleton.jsx";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -95,7 +100,7 @@ export default function RecipesPage() {
                 <h1>Recept</h1>
 
                 <p className="recipes-intro">
-                  Upptäck och spara offentliga recept.
+                  Upptäck recept som delas med inloggade FoodLab-användare.
                 </p>
               </div>
 
@@ -123,9 +128,19 @@ export default function RecipesPage() {
               </Select>
             </div>
 
-            {isLoading && <p>Hämtar recept...</p>}
+            {isLoading && (
+              <div className="recipes-grid" aria-label="Hämtar recept">
+                {Array.from({ length: 6 }, (_, index) => (
+                  <Skeleton className="h-32" key={index} />
+                ))}
+              </div>
+            )}
 
-            {error && <p role="alert">{error}</p>}
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
             {!isLoading && !error && (
               <>

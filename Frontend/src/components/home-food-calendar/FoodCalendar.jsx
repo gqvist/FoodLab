@@ -2,9 +2,12 @@ import "./FoodCalendar.css";
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { PencilIcon } from "lucide-react";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Alert, AlertDescription } from "../ui/alert.jsx";
 import { Button } from "../ui/button.jsx";
+import { Skeleton } from "../ui/skeleton.jsx";
 import { getMealPlan } from "../../lib/meal-plan/getMealPlan.js";
 
 // Day number and corresponding day name
@@ -70,7 +73,12 @@ function FoodCalendar() {
         <div className="food-calendar-actions">
           <Button
             nativeButton={false}
-            render={<Link to="/plan">✎ Ändra planering</Link>}
+            render={
+              <Link to="/plan">
+                <PencilIcon aria-hidden="true" />
+                Ändra planering
+              </Link>
+            }
           />
 
           <Button
@@ -82,13 +90,17 @@ function FoodCalendar() {
       </div>
 
       {isLoading && (
-        <p className="food-calendar-message">Hämtar matplanen...</p>
+        <div className="food-calendar-grid" aria-label="Hämtar matplanen">
+          {days.map(({ dayOfWeek }) => (
+            <Skeleton className="h-[120px]" key={dayOfWeek} />
+          ))}
+        </div>
       )}
 
       {error && (
-        <p className="food-calendar-message food-calendar-error" role="alert">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       {!isLoading && !error && (

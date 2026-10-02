@@ -7,6 +7,20 @@ import { getRecipeById } from "../../lib/recipes/getRecipeById";
 import { deleteRecipe } from "@/lib/recipes/deleteRecipe";
 import { Button } from "@/components/ui/button";
 import { EditIcon, RemoveIcon } from "../../assets/icons/icons";
+import { Alert, AlertDescription } from "../../components/ui/alert.jsx";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog.jsx";
+import { Skeleton } from "../../components/ui/skeleton.jsx";
+import { Spinner } from "../../components/ui/spinner.jsx";
 import TopNav from "../../components/top-nav/TopNav";
 import DashboardCard from "../../components/dashboard-card/DashBoardCard";
 import BackLink from "../../components/back-link/BackLink";
@@ -86,19 +100,6 @@ export default function RecipePage() {
     }
   }
 
-  // Confirmation dialog opens
-  function openDeleteModal() {
-    setDeleteError("");
-    setIsDeleteModalOpen(true);
-  }
-
-  // Confirmation dialog closes
-  function closeDeleteModal() {
-    if (!isDeleting) {
-      setIsDeleteModalOpen(false);
-    }
-  }
-
   if (isLoading) {
     return (
       <>
@@ -106,7 +107,7 @@ export default function RecipePage() {
         <main className="recipe-page">
           <div className="recipe-container">
             <DashboardCard>
-              <p>Hämtar receptet...</p>
+              <Skeleton className="h-40" aria-label="Hämtar receptet" />
             </DashboardCard>
           </div>
         </main>
@@ -122,7 +123,9 @@ export default function RecipePage() {
           <div className="recipe-container">
             <DashboardCard>
               <h1>Något gick fel</h1>
-              <p>{error}</p>
+              <Alert className="mt-4" variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             </DashboardCard>
             <BackLink />
           </div>
@@ -187,17 +190,58 @@ export default function RecipePage() {
                     <EditIcon aria-hidden="true" />
                   </Button>
 
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    aria-label="Ta bort recept"
-                    title="Ta bort recept"
-                    disabled={isDeleting}
-                    onClick={openDeleteModal}
+                  <AlertDialog
+                    open={isDeleteModalOpen}
+                    onOpenChange={(open) => {
+                      if (!isDeleting) {
+                        setDeleteError("");
+                        setIsDeleteModalOpen(open);
+                      }
+                    }}
                   >
-                    <RemoveIcon aria-hidden="true" />
-                  </Button>
+                    <AlertDialogTrigger
+                      render={
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          aria-label="Ta bort recept"
+                          title="Ta bort recept"
+                        />
+                      }
+                    >
+                      <RemoveIcon aria-hidden="true" />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Ta bort recept?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Vill du verkligen ta bort &quot;{recipe.name}&quot;?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+
+                      {deleteError && (
+                        <Alert variant="destructive">
+                          <AlertDescription>{deleteError}</AlertDescription>
+                        </Alert>
+                      )}
+
+                      <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeleting}>
+                          Avbryt
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          type="button"
+                          variant="destructive"
+                          disabled={isDeleting}
+                          onClick={handleDelete}
+                        >
+                          {isDeleting && <Spinner />}
+                          {isDeleting ? "Tar bort..." : "Ta bort"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               )}
             </>
@@ -209,49 +253,6 @@ export default function RecipePage() {
           <BackLink />
         </div>
       </main>
-
-      {isDeleteModalOpen && (
-        <div className="recipe-delete-overlay">
-          <div
-            className="recipe-delete-modal"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="delete-recipe-title"
-            aria-describedby="delete-recipe-description"
-          >
-            <h2 id="delete-recipe-title">Ta bort recept?</h2>
-            <p id="delete-recipe-description">
-              Vill du verkligen ta bort &quot;{recipe.name}&quot;?
-            </p>
-
-            {deleteError && (
-              <p className="recipe-delete-error" role="alert">
-                {deleteError}
-              </p>
-            )}
-
-            <div className="recipe-delete-modal-actions">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={isDeleting}
-                onClick={closeDeleteModal}
-              >
-                Avbryt
-              </Button>
-
-              <Button
-                type="button"
-                variant="destructive"
-                disabled={isDeleting}
-                onClick={handleDelete}
-              >
-                {isDeleting ? "Tar bort..." : "Ta bort"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

@@ -10,14 +10,3 @@
   font-size: small;
   color: var(--muted-foreground);
 }
-
-.back-link-icon {
-  display: inline-flex;
-  color: #000;
-  transition: color 0.2s ease;
-}
-
-.back-link-icon:hover,
-.back-link-icon:focus-visible {
-  color: #737373;
-}

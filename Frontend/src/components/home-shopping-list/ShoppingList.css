@@ -60,6 +60,12 @@
   color: var(--destructive);
 }
 
+.shopping-list-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
 @media (max-width: 600px) {
   .shopping-list-header {
     align-items: flex-start;

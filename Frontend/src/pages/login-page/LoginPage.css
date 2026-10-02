@@ -3,19 +3,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+  background-color: var(--muted);
 }
 
 .login-container {
   width: 100%;
-  max-width: 300px;
+  max-width: 26rem;
 }
 
-.login-container h1 {
-  margin-bottom: 0.5rem;
-}
-
-.login-container p {
-  margin-bottom: 2rem;
+.login-header {
+  justify-items: center;
+  text-align: center;
 }
 
 .login-form {
@@ -34,7 +33,7 @@
   display: block;
   width: 125px;
   height: auto;
-  margin: 0 auto 3rem;
+  margin: 0 auto 1rem;
 }
 
 .no-account-text {
@@ -53,14 +52,4 @@
 .no-account-button:hover,
 .no-account-button:focus-visible {
   text-decoration: underline;
-}
-
-.login-form .login-error {
-  margin: 0;
-  padding: 0.75rem;
-  border: 1px solid #b91c1c;
-  border-radius: 0.5rem;
-  background-color: #fef2f2;
-  color: #991b1b;
-  font-size: 0.875rem;
 }

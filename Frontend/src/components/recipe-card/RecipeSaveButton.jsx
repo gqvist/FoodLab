@@ -3,6 +3,13 @@ import "./RecipeCard.css";
 import { useState } from "react";
 
 import { ProfileIcon, SaveIcon } from "../../assets/icons/icons";
+import { Button } from "../ui/button.jsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip.jsx";
 import { saveRecipe } from "../../lib/recipes/saveRecipe";
 import { unsaveRecipe } from "../../lib/recipes/unsaveRecipe";
 
@@ -65,22 +72,29 @@ export default function RecipeSaveButton({ recipe, onSavedChange }) {
 
   return (
     <>
-      <button
-        type="button"
-        className="recipe-save"
-        aria-pressed={isSaved}
-        aria-label={buttonLabel}
-        aria-describedby={error ? `save-error-${recipe.id}` : undefined}
-        title={error || (isSaved ? "Ta bort sparat recept" : "Spara recept")}
-        disabled={isLoading}
-        onClick={handleClick}
-      >
-        <SaveIcon
-          size={20}
-          fill={isSaved ? "currentColor" : "none"}
-          aria-hidden="true"
-        />
-      </button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                aria-pressed={isSaved}
+                aria-label={buttonLabel}
+                aria-describedby={error ? `save-error-${recipe.id}` : undefined}
+                disabled={isLoading}
+                onClick={handleClick}
+              />
+            }
+          >
+            <SaveIcon fill={isSaved ? "currentColor" : "none"} aria-hidden="true" />
+          </TooltipTrigger>
+          <TooltipContent>
+            {error || (isSaved ? "Ta bort sparat recept" : "Spara recept")}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {error && (
         <span

@@ -2,7 +2,9 @@ import "./NewRecipePage.css";
 
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 
+import { Alert, AlertDescription } from "../../components/ui/alert.jsx";
 import { Button } from "../../components/ui/button.jsx";
 import {
   Combobox,
@@ -14,9 +16,10 @@ import {
 } from "../../components/ui/combobox.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
+import { Skeleton } from "../../components/ui/skeleton.jsx";
+import { Spinner } from "../../components/ui/spinner.jsx";
 import { Switch } from "../../components/ui/switch.jsx";
 import { Textarea } from "../../components/ui/textarea.jsx";
-import { RemoveIcon } from "../../assets/icons/icons.jsx";
 import { createRecipe } from "../../lib/recipes/createRecipe.js";
 import { getRecipeById } from "../../lib/recipes/getRecipeById.js";
 import TopNav from "../../components/top-nav/TopNav.jsx";
@@ -184,7 +187,7 @@ function NewRecipePage({ editMode = false }) {
         <main className="new-recipe-page">
           <div className="new-recipe-container">
             <DashboardCard>
-              <p>Hämtar receptet...</p>
+              <Skeleton className="h-40" aria-label="Hämtar receptet" />
             </DashboardCard>
           </div>
         </main>
@@ -201,7 +204,9 @@ function NewRecipePage({ editMode = false }) {
           <div className="new-recipe-container">
             <DashboardCard>
               <h1>Kunde inte redigera receptet</h1>
-              <p role="alert">{error}</p>
+              <Alert className="mt-4" variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             </DashboardCard>
           </div>
         </main>
@@ -352,7 +357,7 @@ function NewRecipePage({ editMode = false }) {
                       onClick={() => removeIngredient(ingredient.id)}
                       disabled={ingredients.length === 1}
                     >
-                      <RemoveIcon aria-hidden="true" />
+                      <Trash2Icon aria-hidden="true" />
                     </Button>
                   </div>
                 ))}
@@ -364,18 +369,20 @@ function NewRecipePage({ editMode = false }) {
                 variant="outline"
                 onClick={addIngredient}
               >
-                + Lägg till fler
+                <PlusIcon aria-hidden="true" />
+                Lägg till fler
               </Button>
             </DashboardCard>
           </div>
 
           <div className="new-recipe-actions">
             {error && (
-              <p className="new-recipe-error" role="alert">
-                {error}
-              </p>
+              <Alert className="new-recipe-error" variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
             <Button type="submit" disabled={isSaving}>
+              {isSaving && <Spinner />}
               {isSaving
                 ? editMode
                   ? "Uppdaterar..."

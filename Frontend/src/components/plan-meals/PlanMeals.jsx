@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Alert, AlertDescription } from "../ui/alert.jsx";
 import { Button } from "../ui/button.jsx";
+import { Skeleton } from "../ui/skeleton.jsx";
+import { Spinner } from "../ui/spinner.jsx";
 import { Switch } from "../ui/switch.jsx";
 import { RefreshIcon, SaveIcon2 } from "../../assets/icons/icons.jsx";
 import { getMealPlan } from "../../lib/meal-plan/getMealPlan.js";
@@ -268,12 +271,18 @@ function PlanMeals({ onSaved }) {
         </div>
       </div>
 
-      {isLoading && <p className="plan-meals-message">Hämtar planeringen...</p>}
+      {isLoading && (
+        <div className="plan-meals-grid" aria-label="Hämtar planeringen">
+          {days.map(({ dayOfWeek }) => (
+            <Skeleton className="h-[120px]" key={dayOfWeek} />
+          ))}
+        </div>
+      )}
 
       {loadError && (
-        <p className="plan-meals-message plan-meals-error" role="alert">
-          {loadError}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{loadError}</AlertDescription>
+        </Alert>
       )}
 
       {!isLoading && !loadError && (
@@ -324,9 +333,9 @@ function PlanMeals({ onSaved }) {
 
           <div className="plan-meals-feedback">
             {actionError && (
-              <p className="plan-meals-message plan-meals-error" role="alert">
-                {actionError}
-              </p>
+              <Alert variant="destructive">
+                <AlertDescription>{actionError}</AlertDescription>
+              </Alert>
             )}
 
             {!actionError && saveMessage && (
@@ -343,6 +352,11 @@ function PlanMeals({ onSaved }) {
               disabled={!hasSelectedSource || isBusy}
               onClick={handleRandomizeAll}
             >
+              {isRandomizingAll ? (
+                <Spinner />
+              ) : (
+                <RefreshIcon aria-hidden="true" />
+              )}
               {isRandomizingAll ? "Slumpar..." : "Slumpa alla"}
             </Button>
 
@@ -355,7 +369,7 @@ function PlanMeals({ onSaved }) {
               disabled={!hasPlannedRecipe || isBusy}
               onClick={handleSave}
             >
-              <SaveIcon2 aria-hidden="true" />
+              {isSaving ? <Spinner /> : <SaveIcon2 aria-hidden="true" />}
             </Button>
           </div>
         </>

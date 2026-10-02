@@ -11,7 +11,7 @@ export default function ShoppingListPage() {
 
       <main className="shopping-list-page">
         <div className="shopping-list-page-container">
-          <ShoppingList />
+          <ShoppingList defaultExpanded showToggle={false} />
           <BackLink />
         </div>
       </main>

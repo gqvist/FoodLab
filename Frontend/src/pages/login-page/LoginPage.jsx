@@ -7,8 +7,17 @@ import { useNavigate } from "react-router-dom";
 import foodLabLogo from "../../assets/logos/FoodLab.svg";
 import { login } from "../../lib/auth/login.js";
 import { Button } from "../../components/ui/button.jsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card.jsx";
+import { Alert, AlertDescription } from "../../components/ui/alert.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
+import { Spinner } from "../../components/ui/spinner.jsx";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -38,9 +47,14 @@ function LoginPage() {
 
   return (
     <main className="login-page">
-      <div className="login-container">
-        <img src={foodLabLogo} alt="FoodLab" className="login-logo" />
+      <Card className="login-container">
+        <CardHeader className="login-header">
+          <img src={foodLabLogo} alt="FoodLab" className="login-logo" />
+          <CardTitle className="text-xl">Välkommen tillbaka</CardTitle>
+          <CardDescription>Logga in för att fortsätta till FoodLab.</CardDescription>
+        </CardHeader>
 
+        <CardContent>
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-field">
             <Label htmlFor="email">E-post</Label>
@@ -67,12 +81,13 @@ function LoginPage() {
           </div>
 
           {error && (
-            <p className="login-error" role="alert">
-              {error}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           <Button size="lg" type="submit" disabled={isLoading}>
+            {isLoading && <Spinner />}
             {isLoading ? "Loggar in..." : "Logga in"}
           </Button>
         </form>
@@ -82,7 +97,8 @@ function LoginPage() {
             Skapa ett här
           </Link>
         </p>
-      </div>
+        </CardContent>
+      </Card>
     </main>
   );
 }

@@ -1,12 +1,10 @@
 .recipe-card {
   position: relative;
-  display: flex;
-  padding: 1.25rem;
-  background-color: var(--background);
+  height: 100%;
+  min-height: 8rem;
+  padding: 0;
+  gap: 0;
   color: inherit;
-  text-decoration: none;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   transition: background-color 0.2s ease;
 }
 
@@ -19,10 +17,9 @@
   outline-offset: 3px;
 }
 
-.recipe-card h3 {
+.recipe-card-title {
   padding-right: 2.5rem;
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .recipe-card-link {
@@ -30,6 +27,7 @@
   flex: 1;
   flex-direction: column;
   min-width: 0;
+  padding: 1.25rem;
   color: inherit;
   text-decoration: none;
 }
@@ -38,7 +36,7 @@
   content: ""; 
   position: absolute; 
   inset: 0; 
-  border-radius: var(--radius); }
+  border-radius: inherit; }
 
 .recipe-card-action { 
   position: absolute; 
@@ -51,7 +49,7 @@
   align-items: center; 
   gap: 0.3rem; }
 
-.recipe-save, .recipe-owner {
+.recipe-owner {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -60,15 +58,6 @@
   flex-shrink: 0;
   color: var(--foreground);
 }
-.recipe-save { 
-  cursor: pointer; 
-  border-radius: var(--radius); }
-
-.recipe-save:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-
 .recipe-save-message {
   position: absolute;
   width: 1px;
@@ -81,13 +70,6 @@
   clip: rect(0, 0, 0, 0);
 }
 
-.recipe-save:hover { 
-  background: var(--muted); }
-
-.recipe-save:focus-visible { 
-  outline: 2px solid var(--primary); 
-  outline-offset: 2px; }
-
 .recipe-card-info {
   display: flex;
   align-items: center;
@@ -95,6 +77,9 @@
   gap: 1rem;
   margin-top: auto;
   padding-top: 1.5rem;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
   font-size: 0.875rem;
   color: var(--muted-foreground);
 }

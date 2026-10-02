@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 
 import RecipeCard from "../recipe-card/RecipeCard.jsx";
 import DashboardCard from "../dashboard-card/DashBoardCard.jsx";
+import { Alert, AlertDescription } from "../ui/alert.jsx";
 import { Button } from "../ui/button.jsx";
+import { Skeleton } from "../ui/skeleton.jsx";
 import { getSavedRecipes } from "../../lib/recipes/getSavedRecipes.js";
 
 function SavedRecipes({ showAll = false }) {
@@ -82,9 +84,19 @@ function SavedRecipes({ showAll = false }) {
         )}
       </div>
 
-      {isLoading && <p>Hämtar sparade recept...</p>}
+      {isLoading && (
+        <div className="saved-recipes-grid" aria-label="Hämtar sparade recept">
+          {Array.from({ length: showAll ? 6 : 3 }, (_, index) => (
+            <Skeleton className="h-32" key={index} />
+          ))}
+        </div>
+      )}
 
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {!isLoading && !error && (
         <>

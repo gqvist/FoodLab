@@ -3,6 +3,8 @@ import "./RecipeRating.css";
 import { useState } from "react";
 
 import { RatingIcon } from "../../assets/icons/icons";
+import { Alert, AlertDescription } from "../ui/alert.jsx";
+import { Button } from "../ui/button.jsx";
 import { rateRecipe } from "../../lib/recipes/rateRecipe";
 
 const ratingValues = [1, 2, 3, 4, 5];
@@ -70,10 +72,12 @@ export default function RecipeRating({ recipe, onRated }) {
               const isFilled = value <= displayedRating;
 
               return (
-                <button
+                <Button
                   key={value}
                   type="button"
-                  className={`recipe-rating-button${isFilled ? " recipe-rating-button-filled" : ""}`}
+                  className={isFilled ? "recipe-rating-button-filled" : ""}
+                  variant="ghost"
+                  size="icon-xs"
                   aria-label={`${value} av 5 stjärnor`}
                   aria-pressed={isSelected}
                   disabled={isLoading}
@@ -87,7 +91,7 @@ export default function RecipeRating({ recipe, onRated }) {
                     fill={isFilled ? "currentColor" : "none"}
                     aria-hidden="true"
                   />
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -95,9 +99,9 @@ export default function RecipeRating({ recipe, onRated }) {
       )}
 
       {error && (
-        <p className="recipe-rating-error" role="alert">
-          {error}
-        </p>
+        <Alert className="recipe-rating-error" variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
     </div>
   );
