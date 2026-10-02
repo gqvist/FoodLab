@@ -8,33 +8,55 @@ import foodLabLogo from "../../assets/logos/FoodLab.svg";
 
 function TopNav() {
   return (
-    <nav className="top-nav">
+    <header className="top-nav">
       <NavLink to="/home" className="top-nav-brand">
         <img src={foodLabLogo} alt="FoodLab" className="top-nav-logo" />
       </NavLink>
 
-      <div className="top-nav-links">
-        <NavLink to="/home" className={buttonVariants({ variant: "ghost" })}>
+      <nav className="top-nav-pill" aria-label="Huvudnavigation">
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            buttonVariants({ variant: isActive ? "secondary" : "ghost" })
+          }
+        >
           Hem
         </NavLink>
 
-        <NavLink to="/plan" className={buttonVariants({ variant: "ghost" })}>
+        <NavLink
+          to="/plan"
+          className={({ isActive }) =>
+            buttonVariants({ variant: isActive ? "secondary" : "ghost" })
+          }
+        >
           Planera
         </NavLink>
 
-        <NavLink to="/recipes" className={buttonVariants({ variant: "ghost" })}>
+        <NavLink
+          to="/recipes"
+          className={({ isActive }) =>
+            buttonVariants({ variant: isActive ? "secondary" : "ghost" })
+          }
+        >
           Recept
         </NavLink>
 
+        <span className="top-nav-divider" aria-hidden="true" />
+
         <NavLink
           to="/profile"
-          className={buttonVariants({ variant: "ghost", size: "icon" })}
+          className={({ isActive }) =>
+            buttonVariants({
+              variant: isActive ? "secondary" : "ghost",
+              size: "icon",
+            })
+          }
           aria-label="Konto"
         >
           <ProfileIcon />
         </NavLink>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }
 
