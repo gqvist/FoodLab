@@ -1,18 +1,15 @@
-.profile-page {
+.shopping-list-page {
   min-height: 100vh;
-  padding: calc(var(--top-nav-height) + var(--page-top-gap)) 2rem 2rem;
+  padding: calc(var(--top-nav-height) + var(--page-top-gap)) 1rem 2rem;
   background-color: var(--muted);
 }
 
-.profile-container {
+.shopping-list-page-container {
   width: 100%;
   max-width: 70rem;
   margin: 0 auto;
+
   display: flex;
   flex-direction: column;
   gap: var(--dashboard-gap);
-}
-
-.profile-logout {
-  align-self: flex-start;
 }

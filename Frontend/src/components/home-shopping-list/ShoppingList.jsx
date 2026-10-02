@@ -65,8 +65,9 @@ function ShoppingList({ refreshKey = 0 }) {
           type="button"
           variant="outline"
           size="icon"
-          aria-label="Dela inköpslista"
-          title="Dela inköpslista"
+          aria-label="Dela inköpslista (inte tillgängligt ännu)"
+          title="Delning är inte tillgängligt ännu"
+          disabled
         >
           <ShareIcon aria-hidden="true" />
         </Button>

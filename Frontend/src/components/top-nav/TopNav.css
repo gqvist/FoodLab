@@ -43,6 +43,48 @@
   background-color: var(--border);
 }
 
+.top-nav-profile {
+  position: relative;
+  display: flex;
+}
+
+.top-nav-profile-menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: -0.375rem;
+
+  display: flex;
+  width: 13rem;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background-color: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 12%);
+}
+
+.top-nav-menu-link,
+.top-nav-logout {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.top-nav-menu-divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background-color: var(--border);
+}
+
+.top-nav-logout-error {
+  padding: 0.25rem 0.5rem;
+  color: var(--destructive);
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
 @media (max-width: 600px) {
   .top-nav {
     padding-inline: 0.75rem;

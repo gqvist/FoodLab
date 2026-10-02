@@ -1,12 +1,72 @@
 import "./TopNav.css";
 
-import { NavLink } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import { buttonVariants } from "../ui/button.jsx";
+import { Button, buttonVariants } from "../ui/button.jsx";
+import { Spinner } from "../ui/spinner.jsx";
 import { ProfileIcon } from "../../assets/icons/icons.jsx";
 import foodLabLogo from "../../assets/logos/FoodLab.svg";
+import { logout } from "../../lib/auth/logout.js";
 
 function TopNav() {
+  const navigate = useNavigate();
+  const menuRef = useRef(null);
+  const profileButtonRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
+
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    function handlePointerDown(event) {
+      if (!menuRef.current?.contains(event.target)) {
+        setIsMenuOpen(false);
+        setLogoutError("");
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        setLogoutError("");
+        profileButtonRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMenuOpen]);
+
+  function toggleMenu() {
+    setIsMenuOpen((isOpen) => !isOpen);
+    setLogoutError("");
+  }
+
+  async function handleLogout() {
+    setLogoutError("");
+    setIsLoggingOut(true);
+
+    try {
+      await logout();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      setLogoutError(
+        error instanceof Error
+          ? error.message
+          : "Kunde inte logga ut. Försök igen.",
+      );
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
+
   return (
     <header className="top-nav">
       <NavLink to="/home" className="top-nav-brand">
@@ -43,18 +103,80 @@ function TopNav() {
 
         <span className="top-nav-divider" aria-hidden="true" />
 
-        <NavLink
-          to="/profile"
-          className={({ isActive }) =>
-            buttonVariants({
-              variant: isActive ? "secondary" : "ghost",
-              size: "icon",
-            })
-          }
-          aria-label="Konto"
-        >
-          <ProfileIcon />
-        </NavLink>
+        <div className="top-nav-profile" ref={menuRef}>
+          <Button
+            ref={profileButtonRef}
+            variant="ghost"
+            size="icon"
+            type="button"
+            aria-label="Öppna kontomeny"
+            aria-haspopup="dialog"
+            aria-expanded={isMenuOpen}
+            aria-controls="top-nav-profile-menu"
+            onClick={toggleMenu}
+          >
+            <ProfileIcon />
+          </Button>
+
+          {isMenuOpen && (
+            <div
+              id="top-nav-profile-menu"
+              className="top-nav-profile-menu"
+              role="dialog"
+              aria-label="Kontomeny"
+            >
+              <NavLink
+                to="/shopping-list"
+                className={buttonVariants({
+                  variant: "ghost",
+                  className: "top-nav-menu-link",
+                })}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Inköpslista
+              </NavLink>
+              <NavLink
+                to="/my-recipes"
+                className={buttonVariants({
+                  variant: "ghost",
+                  className: "top-nav-menu-link",
+                })}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Mina recept
+              </NavLink>
+              <NavLink
+                to="/saved-recipes"
+                className={buttonVariants({
+                  variant: "ghost",
+                  className: "top-nav-menu-link",
+                })}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sparade recept
+              </NavLink>
+
+              <span className="top-nav-menu-divider" aria-hidden="true" />
+
+              {logoutError && (
+                <p className="top-nav-logout-error" role="alert">
+                  {logoutError}
+                </p>
+              )}
+
+              <Button
+                className="top-nav-logout"
+                variant="destructive"
+                type="button"
+                disabled={isLoggingOut}
+                onClick={handleLogout}
+              >
+                {isLoggingOut && <Spinner />}
+                {isLoggingOut ? "Loggar ut..." : "Logga ut"}
+              </Button>
+            </div>
+          )}
+        </div>
       </nav>
     </header>
   );

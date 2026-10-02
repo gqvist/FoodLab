@@ -76,7 +76,7 @@ function FoodCalendar() {
           <Button
             nativeButton={false}
             variant="outline"
-            render={<Link to="/profile">Inköpslista</Link>}
+            render={<Link to="/shopping-list">Inköpslista</Link>}
           />
         </div>
       </div>
