@@ -138,8 +138,8 @@ public class RecipeService
             .ToList();
     }
 
-    // Loads public recipes and adds saved, ownership and rating info for current user
-    public async Task<List<RecipeResponseDto>> GetPublicAsync(string? currentUserId, CancellationToken cancellationToken = default)
+    // Loads recipes shared with authenticated users and adds saved, ownership and rating info.
+    public async Task<List<RecipeResponseDto>> GetPublicAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
         var recipes = await _dbContext.Recipes
             .AsNoTracking()
@@ -149,25 +149,18 @@ public class RecipeService
             .OrderByDescending(recipe => recipe.CreatedAt)
             .ToListAsync(cancellationToken);
 
-        var savedRecipeIds = new HashSet<int>();
-
-        if (currentUserId is not null)
-        {
-            savedRecipeIds = (
-                await _dbContext.SavedRecipes
-                    .AsNoTracking()
-                    .Where(savedRecipe => savedRecipe.UserId == currentUserId)
-                    .Select(savedRecipe => savedRecipe.RecipeId)
-                    .ToListAsync(cancellationToken)
-            ).ToHashSet();
-        }
+        var savedRecipeIds = (
+            await _dbContext.SavedRecipes
+                .AsNoTracking()
+                .Where(savedRecipe => savedRecipe.UserId == currentUserId)
+                .Select(savedRecipe => savedRecipe.RecipeId)
+                .ToListAsync(cancellationToken)
+        ).ToHashSet();
 
         return recipes
             .Select(recipe =>
             {
-                var isOwner =
-                    currentUserId != null &&
-                    recipe.OwnerId == currentUserId;
+                var isOwner = recipe.OwnerId == currentUserId;
 
                 return MapToResponse(
                     recipe,
@@ -179,23 +172,23 @@ public class RecipeService
     }
 
     // Loads one recipe while preventing reading private recipes of other users
-    public async Task<RecipeResponseDto?> GetByIdAsync(int id, string? currentUserId, CancellationToken cancellationToken = default)
+    public async Task<RecipeResponseDto?> GetByIdAsync(int id, string currentUserId, CancellationToken cancellationToken = default)
     {
         var recipe = await _dbContext.Recipes
             .AsNoTracking()
             .Include(recipe => recipe.Ingredients)
             .Include(recipe => recipe.Ratings)
             .SingleOrDefaultAsync(recipe =>
-                recipe.Id == id && (recipe.IsPublic || (currentUserId != null && recipe.OwnerId == currentUserId)), cancellationToken);
+                recipe.Id == id && (recipe.IsPublic || recipe.OwnerId == currentUserId), cancellationToken);
 
         if (recipe is null)
         {
             return null;
         }
 
-        var isOwner = currentUserId != null && recipe.OwnerId == currentUserId;
+        var isOwner = recipe.OwnerId == currentUserId;
 
-        var isSaved = currentUserId is not null && !isOwner &&
+        var isSaved = !isOwner &&
 
             await _dbContext.SavedRecipes
                 .AsNoTracking()

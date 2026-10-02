@@ -18,13 +18,18 @@ public class RecipesController : ControllerBase
         _recipeService = recipeService;
     }
 
-    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(typeof(List<RecipeResponseDto>), StatusCodes.Status200OK)]
-    // Returns all public recipes and includes users saved/rating information when logged in
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // Returns recipes shared with authenticated users and includes saved/rating information.
     public async Task<ActionResult<List<RecipeResponseDto>>> GetPublic(CancellationToken cancellationToken)
     {
         var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId is null)
+        {
+            return Unauthorized();
+        }
 
         var recipes = await _recipeService.GetPublicAsync(currentUserId, cancellationToken);
 
@@ -66,14 +71,19 @@ public class RecipesController : ControllerBase
         return Ok(recipes);
     }
 
-    [AllowAnonymous]
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(RecipeResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    // Returns a public/private recipe when requested by owner
-    public async Task<ActionResult<RecipeResponseDto>> GetById( int id, CancellationToken cancellationToken)
+    // Returns a shared recipe or a private recipe requested by its owner.
+    public async Task<ActionResult<RecipeResponseDto>> GetById(int id, CancellationToken cancellationToken)
     {
         var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId is null)
+        {
+            return Unauthorized();
+        }
 
         var recipe = await _recipeService.GetByIdAsync(id, currentUserId, cancellationToken);
 

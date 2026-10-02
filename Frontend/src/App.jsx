@@ -19,14 +19,14 @@ function App() {
         {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/recipe/:id" element={<RecipePage />} />
 
         {/* Private routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/profile" element={<Navigate to="/home" replace />} />
+          <Route path="/recipes" element={<RecipesPage />} />
+          <Route path="/recipe/:id" element={<RecipePage />} />
           <Route path="/recipe/new" element={<NewRecipePage />} />
           <Route path="/recipe/:id/edit" element={<NewRecipePage editMode />} />
           <Route path="/plan" element={<PlanPage />} />
